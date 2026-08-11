@@ -1,4 +1,3 @@
-at minimum:
 streamlit
 pandas
 plotly
