@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import textwrap
 st.set_page_config(page_title="Fraser Health Needs Index", layout="wide")
 final_df = pd.read_csv("data/final_df.csv")
 
@@ -12,129 +13,102 @@ page = st.sidebar.radio(
 
 st.title("Fraser Health Needs Index")
 st.markdown("An interactive tool ranking and grouping hospital systems' need across the Fraser Health Region.")
-
 if page == "Overview":
-    st.title("Fraser Health Needs Index")
-    st.markdown(
-        "An interactive tool ranking and grouping hospital "
-        "systems' need across the Fraser Health Region."
-    )
-
-    st.subheader("Municipality Ranking")
-
-    # Sort by rank
+   st.subheader("Municipality Ranking")
     ranking = final_df.sort_values("Rank")
 
     cluster_colors = {
-        "Cluster 0": "#3498DB",
-        "Cluster 1": "#F1C40F",
-        "Cluster 2": "#E74C3C",
-        "Cluster 3": "#2ECC71"
-    }
+    "High-Pressure System (High Demand + Strained Capacity)": "#E74C3C",
+    "High Demand + Adequate Capacity": "#F1C40F",
+    "Low Demand + Strained Capacity": "#3498DB",
+    "Low-Need System": "#2ECC71"
+}
+st.markdown("""
+<style>
 
+.ranking-card {
+    border-radius: 18px;
+    padding: 24px 28px;
+    margin-bottom: 18px;
 
-    st.markdown("""
-    <style>
+    background-color: #1E222B;
 
-    .ranking-card {
-        border-radius: 18px;
-        padding: 24px 28px;
-        margin-bottom: 18px;
+    border-top: 1px solid #3A3F4B;
+    border-right: 1px solid #3A3F4B;
+    border-bottom: 1px solid #3A3F4B;
 
-        background-color: #1E222B;
+    min-height: 145px;
 
-        border-top: 1px solid #3A3F4B;
-        border-right: 1px solid #3A3F4B;
-        border-bottom: 1px solid #3A3F4B;
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.15);
+}
 
-        min-height: 145px;
+.rank-number {
+    font-size: 42px;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 8px;
+}
 
-        box-shadow: 0px 4px 12px rgba(0,0,0,0.15);
+.municipality-name {
+    font-size: 27px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
 
-        transition: transform 0.15s ease;
-    }
+.need-score {
+    font-size: 17px;
+    opacity: 0.85;
+}
 
-    .ranking-card:hover {
-        transform: translateY(-2px);
-    }
+.cluster-label {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 12px;
+}
 
-    .rank-number {
-        font-size: 42px;
-        font-weight: 800;
-        line-height: 1;
-        margin-bottom: 8px;
-    }
+</style>
+""", unsafe_allow_html=True)
 
-    .municipality-name {
-        font-size: 27px;
-        font-weight: 700;
-        margin-bottom: 8px;
-    }
+ranking = final_df.sort_values("Rank")
 
-    .need-score {
-        font-size: 17px;
-        opacity: 0.85;
-    }
+for _, row in ranking.iterrows():
 
-    .cluster-label {
-        display: inline-block;
+    cluster = row["Cluster_Label"]
 
-        padding: 5px 12px;
+    # Match the actual cluster name to a color
+    cluster_color = cluster_colors.get(cluster, "#808080")
 
-        border-radius: 20px;
+    card = f"""
+<div class="ranking-card" style="border-left: 8px solid {cluster_color};">
 
-        font-size: 13px;
-        font-weight: 600;
+    <div class="rank-number">
+        #{int(row['Rank'])}
+    </div>
 
-        margin-top: 12px;
-    }
+    <div class="municipality-name">
+        {row['Municipality']}
+    </div>
 
-    </style>
-    """, unsafe_allow_html=True)
+    <div class="need-score">
+        Need Index: <strong>{row['Need Index']:.4f}</strong>
+    </div>
 
-    for _, row in ranking.iterrows():
+    <div class="cluster-label"
+         style="background-color: {cluster_color}; color: white;">
+        {cluster}
+    </div>
 
-        cluster = row["Cluster_Label"]
+</div>
+"""
 
-        # Get cluster color
-        cluster_color = cluster_colors.get(
-            cluster,
-            "#808080"
-        )
-
-        st.markdown(
-            f"""
-            <div class="ranking-card"
-                 style="border-left: 8px solid {cluster_color};">
-
-                <div class="rank-number">
-                    #{int(row['Rank'])}
-                </div>
-
-                <div class="municipality-name">
-                    {row['Municipality']}
-                </div>
-
-                <div class="need-score">
-                    Need Index:
-                    <strong>{row['Need Index']:.4f}</strong>
-                </div>
-
-                <div class="cluster-label"
-                     style="
-                        background-color: {cluster_color};
-                        color: white;
-                     ">
-                    {cluster}
-                </div>
-
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-
-
-    fig = px.bar(
+    st.markdown(
+        textwrap.dedent(card),
+        unsafe_allow_html=True
+    )
+   fig = px.bar(
         final_df.sort_values('Need Index', ascending=False),
         x='Need Index', y='Municipality', color='Cluster_Label',
         title="Need Index by Municipality"
