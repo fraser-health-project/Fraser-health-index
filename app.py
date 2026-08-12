@@ -67,7 +67,7 @@ if page == "Overview":
 }
 
 </style>
-"""), unsafe_allow_html=True
+"""), unsafe_allow_html==True
 
     for _, row in ranking.iterrows():
 
