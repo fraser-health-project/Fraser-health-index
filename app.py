@@ -17,13 +17,13 @@ if page == "Overview":
    st.subheader("Municipality Ranking")
    ranking = final_df.sort_values("Rank")
 
-    cluster_colors = {
+   cluster_colors = {
     "High-Pressure System (High Demand + Strained Capacity)": "#E74C3C",
     "High Demand + Adequate Capacity": "#F1C40F",
     "Low Demand + Strained Capacity": "#3498DB",
     "Low-Need System": "#2ECC71"
 }
-st.markdown("""
+    st.markdown("""
 <style>
 
 .ranking-card {
