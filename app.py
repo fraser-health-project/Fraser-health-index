@@ -67,7 +67,7 @@ if page == "Overview":
 }
 
 </style>
-"""), unsafe_allow_html==True
+""" unsafe_allow_html=True)
 
     for _, row in ranking.iterrows():
 
@@ -76,6 +76,4 @@ if page == "Overview":
 <div class="rank-number">#{int(row['Rank'])}</div>
 <div class="municipality-name">{row['Municipality']}</div>
 <div class="need-score">Need Index: <strong>{row['Need Index']:.4f}</strong></div>
-</div>""",
-            unsafe_allow_html=True
-        )
+</div>""",unsafe_allow_html=True)
