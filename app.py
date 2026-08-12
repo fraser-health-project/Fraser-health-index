@@ -11,12 +11,12 @@ page = st.sidebar.radio(
     "Navigate",
     ["Overview", "View By Map", "View By Group", "Data and Limitations", "Methodology"]
 )
-
-st.title("Fraser Health Needs Index")
-st.markdown("An interactive tool ranking and grouping hospital systems' need across the Fraser Health Region.")
 # Ranking Cards
 if page == "Overview":
-
+ st.title("Fraser Health Needs Index")
+ st.markdown("An interactive tool ranking and grouping hospital systems' need across the Fraser Health Region.")
+ st.subheader("Municipality Ranking")
+ ranking = final_df.sort_values("Rank")
  st.markdown(
     """
     <style>
