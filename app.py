@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-
+final_df = pd.read_csv("final_df.csv")
 st.title("Fraser Health Needs Index")
 df = pd.read_csv("data/final_df.csv")
 st.dataframe(df)
