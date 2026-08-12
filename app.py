@@ -48,7 +48,7 @@ if page == "Overview":
     """,
     unsafe_allow_html=True
 )
-    for _, row in ranking.iterrows():
+for _, row in ranking.iterrows():
 
     card_html = f"""
 <div class="ranking-card">
