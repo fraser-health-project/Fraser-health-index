@@ -1,12 +1,11 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+st.set_page_config(page_title="Fraser Health Needs Index", layout="wide")
 final_df = pd.read_csv("data/final_df.csv")
 st.title("Fraser Health Needs Index")
 df = pd.read_csv("data/final_df.csv")
 st.dataframe(df)
-
-st.set_page_config(page_title="Fraser Health Needs Index", layout="wide")
 
 st.sidebar.title("Fraser Health Needs Index")
 page = st.sidebar.radio(
@@ -19,14 +18,20 @@ st.markdown("An interactive tool ranking and grouping hospital systems' need acr
 
 if page == "Overview":
     st.subheader("Municipality Ranking")
+    cluster_colors = {
+    0: "#3498DB",
+    1: "#F1C40F",
+    2: "#E74C3C",
+    3: "#2ECC71"
+}
     st.dataframe(
-        final_df[['Rank', 'Municipality', 'Need Index', 'Cluster_Label']].sort_values('Rank'),
+        final_df[['Rank', 'Municipality', 'Need Index']].sort_values('Rank'),
         use_container_width=True
     )
 
     fig = px.bar(
         final_df.sort_values('Need Index', ascending=False),
-        x='Municipality', y='Need Index', color='Cluster_Label',
+        x='Need Index', y='Municipality', color='Cluster_Label',
         title="Need Index by Municipality"
     )
     st.plotly_chart(fig, use_container_width=True)
