@@ -10,7 +10,7 @@ st.set_page_config(page_title="Fraser Health Needs Index", layout="wide")
 st.sidebar.title("Fraser Health Needs Index")
 page = st.sidebar.radio(
     "Navigate",
-    ["Overview", "View By Map", "", "Clusters", "Methodology"]
+    ["Overview", "View By Map", "View By Group", "Data and Limitations", "Methodology"]
 )
 
 st.title("Fraser Health Needs Index")
