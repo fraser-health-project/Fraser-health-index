@@ -3,11 +3,8 @@ import pandas as pd
 import plotly.express as px
 st.set_page_config(page_title="Fraser Health Needs Index", layout="wide")
 final_df = pd.read_csv("data/final_df.csv")
-st.title("Fraser Health Needs Index")
-df = pd.read_csv("data/final_df.csv")
-st.dataframe(df)
 
-st.sidebar.title("Fraser Health Needs Index")
+st.sidebar.title("In this index...")
 page = st.sidebar.radio(
     "Navigate",
     ["Overview", "View By Map", "View By Group", "Data and Limitations", "Methodology"]
