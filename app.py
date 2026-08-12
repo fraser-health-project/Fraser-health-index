@@ -23,7 +23,7 @@ if page == "Overview":
     "Low Demand + Strained Capacity": "#3498DB",
     "Low-Need System": "#2ECC71"
 }
-    st.markdown("""
+   st.markdown("""
 <style>
 
 .ranking-card {
