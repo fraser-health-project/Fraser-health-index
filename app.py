@@ -15,7 +15,7 @@ st.title("Fraser Health Needs Index")
 st.markdown("An interactive tool ranking and grouping hospital systems' need across the Fraser Health Region.")
 if page == "Overview":
    st.subheader("Municipality Ranking")
-    ranking = final_df.sort_values("Rank")
+   ranking = final_df.sort_values("Rank")
 
     cluster_colors = {
     "High-Pressure System (High Demand + Strained Capacity)": "#E74C3C",
