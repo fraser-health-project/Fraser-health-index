@@ -108,7 +108,7 @@ for _, row in ranking.iterrows():
         textwrap.dedent(card),
         unsafe_allow_html=True
     )
-   fig = px.bar(
+    fig = px.bar(
         final_df.sort_values('Need Index', ascending=False),
         x='Need Index', y='Municipality', color='Cluster_Label',
         title="Need Index by Municipality"
