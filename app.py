@@ -396,12 +396,12 @@ for _, row in ranking.iterrows():
     else:
          st.markdown("_Profile not yet written for this municipality._")
         
-        st.markdown("**Notable Stats**")
-        highlights = get_top_rankings(muni, stats_source, highlight_columns)
-        if highlights:
-            for h in highlights:
-                st.markdown(f"- {h}")
-        else:
+    st.markdown("**Notable Stats**")
+    highlights = get_top_rankings(muni, stats_source, highlight_columns)
+    if highlights:
+        for h in highlights:
+            st.markdown(f"- {h}")
+    else:
             st.markdown("_No top-3 rankings in the highlighted categories._")
 
-        st.caption(f"Cluster: {row['Cluster_Label']}")
+    st.caption(f"Cluster: {row['Cluster_Label']}")
