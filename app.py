@@ -298,8 +298,9 @@ def get_top_rankings(municipality,df,columns,top_n_threshold=3):
 if page == "Overview":
     st.title("Fraser Health Needs Index")
     st.markdown("An interactive tool ranking and grouping hospital systems' need across the Fraser Health Region.")
-
-    main_col, control_col = st.columns([3, 1])
+    if "expanded_muni" not in st.session_state:
+        st.session_state.expanded_muni = None
+        main_col, control_col = st.columns([3, 1])
 
     with control_col:
         st.markdown("#### Pillar Weights")
@@ -370,35 +371,37 @@ if page == "Overview":
         )
 
         stats_source = components.merge(final_df[["Municipality"]], on="Municipality")
+if "expanded_muni" not in st.session_state:
+    st.session_state.expanded_muni = None
 
-        for _, row in ranking.iterrows():
-            card_html = f"""
+for _, row in ranking.iterrows():
+    muni = row["Municipality"]
+    card_html = f"""
 <div class="ranking-card">
     <div class="rank-number">#{int(row['Rank'])}</div>
-    <div class="municipality-name">{row['Municipality']}</div>
+    <div class="municipality-name">{muni}</div>
     <div class="need-score">
         Need Index: <strong>{row['Live Need Index']:.4f}</strong>
     </div>
 </div>
 """
-            st.markdown(card_html, unsafe_allow_html=True)
+    st.markdown(card_html, unsafe_allow_html=True)
 
-            with st.expander(f"View {row['Municipality']} details"):
-                profile_row = profiles[profiles["Municipality"] == row["Municipality"]]
-                if not profile_row.empty:
-                    profile_row = profile_row.iloc[0]
-                    st.markdown(profile_row["Blurb"])
-                else:
-                    st.markdown("_Profile not yet written for this municipality._")
+    if st.button(f"View {muni} details", key=f"btn_{muni}"):
+        # toggle: clicking the same municipality again collapses it
+        st.session_state.expanded_muni = None if st.session_state.expanded_muni == muni else muni
+    if not profile_row.empty:
+        profile_row = profile_row.iloc[0]
+        st.markdown(profile_row["Blurb"])
+    else:
+         st.markdown("_Profile not yet written for this municipality._")
+        
+        st.markdown("**Notable Stats**")
+        highlights = get_top_rankings(muni, stats_source, highlight_columns)
+        if highlights:
+            for h in highlights:
+                st.markdown(f"- {h}")
+        else:
+            st.markdown("_No top-3 rankings in the highlighted categories._")
 
-                st.markdown("**Notable Stats**")
-                highlights = get_top_rankings(row["Municipality"], stats_source, highlight_columns)
-                if highlights:
-                    for h in highlights:
-                        st.markdown(f"- {h}")
-                else:
-                    st.markdown("_No top-3 rankings in the highlighted categories._")
-
-                st.caption(f"Cluster: {row['Cluster_Label']}")
-
-                            
+        st.caption(f"Cluster: {row['Cluster_Label']}")
