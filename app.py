@@ -373,7 +373,13 @@ if page == "Overview":
         stats_source = components.merge(final_df[["Municipality"]], on="Municipality")
 if "expanded_muni" not in st.session_state:
     st.session_state.expanded_muni = None
-
+if st.session_state.expanded_muni == muni:
+    profile_row = profiles[profiles["Municipality"] == muni] 
+    if not profile_row.empty:
+        profile_row = profile_row.iloc[0]
+        st.markdown(profile_row["Blurb"])
+    else:
+        st.markdown("_Profile not yet written for this municipality._")
 for _, row in ranking.iterrows():
     muni = row["Municipality"]
     card_html = f"""
