@@ -93,8 +93,7 @@ municipality_blurbs = {municipality_blurbs = {
     considerably lower emergency wait times, and less demand for procedures (such as biopsies, CT scans, etc). However, it is important to note 2 major factors that 
     wouldn't show up within this index, those being that 1. New Westminister has the highest population growth rate of all municipalities, it will need more resources
     in future years, including preventative care to avoid strain on emergency and acute systems, and 2. New West's Royal Columbian Hospital is the oldest hospital in BC,
-    thus entailing that it's aging infrastructure and systems will need repair and renovation to accommodate new technologies over time."""
-}
+    thus entailing that it's aging infrastructure and systems will need repair and renovation to accommodate new technologies over time."""}
 if "selected_municipality" not in st.session_state:
     st.session_state.selected_municipality = None
 st.markdown("""
