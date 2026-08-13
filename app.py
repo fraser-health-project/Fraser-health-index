@@ -300,7 +300,7 @@ if page == "Overview":
     st.markdown("An interactive tool ranking and grouping hospital systems' need across the Fraser Health Region.")
     if "expanded_muni" not in st.session_state:
         st.session_state.expanded_muni = None
-        main_col, control_col = st.columns([3, 1])
+    main_col, control_col = st.columns([3, 1])
 
     with control_col:
         st.markdown("#### Pillar Weights")
@@ -371,15 +371,6 @@ if page == "Overview":
         )
 
         stats_source = components.merge(final_df[["Municipality"]], on="Municipality")
-if "expanded_muni" not in st.session_state:
-    st.session_state.expanded_muni = None
-if st.session_state.expanded_muni == muni:
-    profile_row = profiles[profiles["Municipality"] == muni] 
-    if not profile_row.empty:
-        profile_row = profile_row.iloc[0]
-        st.markdown(profile_row["Blurb"])
-    else:
-        st.markdown("_Profile not yet written for this municipality._")
 for _, row in ranking.iterrows():
     muni = row["Municipality"]
     card_html = f"""
