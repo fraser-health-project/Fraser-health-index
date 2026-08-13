@@ -385,20 +385,23 @@ for _, row in ranking.iterrows():
     st.markdown(card_html, unsafe_allow_html=True)
 
     if st.button(f"View {muni} details", key=f"btn_{muni}"):
-        # toggle: clicking the same municipality again collapses it
         st.session_state.expanded_muni = None if st.session_state.expanded_muni == muni else muni
-    if not profile_row.empty:
-        profile_row = profile_row.iloc[0]
-        st.markdown(profile_row["Blurb"])
-    else:
-         st.markdown("_Profile not yet written for this municipality._")
-        
-    st.markdown("**Notable Stats**")
-    highlights = get_top_rankings(muni, stats_source, highlight_columns)
-    if highlights:
-        for h in highlights:
-            st.markdown(f"- {h}")
-    else:
+
+    if st.session_state.expanded_muni == muni:
+        profile_row = profiles[profiles["Municipality"] == muni]
+        if not profile_row.empty:
+            profile_row = profile_row.iloc[0]
+            st.markdown(profile_row["Blurb"])
+        else:
+            st.markdown("_Profile not yet written for this municipality._")
+
+        st.markdown("**Notable Stats**")
+        highlights = get_top_rankings(muni, stats_source, highlight_columns)
+        if highlights:
+            for h in highlights:
+                st.markdown(f"- {h}")
+        else:
             st.markdown("_No top-3 rankings in the highlighted categories._")
 
-    st.caption(f"Cluster: {row['Cluster_Label']}")
+        st.caption(f"Cluster: {row['Cluster_Label']}")
+   
