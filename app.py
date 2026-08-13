@@ -71,7 +71,7 @@ for _, row in ranking.iterrows():
 # Add/edit your own blurbs here.
 # The key MUST exactly match the Municipality name in your dataframe.
 
-municipality_blurbs = {municipality_blurbs = {
+municipality_blurbs = {
     "Surrey": """
     Surrey ranks highly across the index in almost all scenarios, this reflects a combination 
     of it being the highest populated municipality in the Fraser Health Area, along with large demand and access pressures, 
