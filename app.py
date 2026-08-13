@@ -13,6 +13,9 @@ page = st.sidebar.radio(
 )
 ##Setup
 components = pd.read_csv("data/pillar_components.csv")
+numeric_cols = components.columns.drop("Municipality")
+components[numeric_cols] = components[numeric_cols].fillna(0)
+
 profiles = pd.DataFrame({
  "Municipality": [ "Surrey", "Abbotsford", "Delta", "Langley", "White Rock", "Burnaby", 
                   "New Westminster", "Coquitlam", "Port Coquitlam", "Port Moody", "Pitt Meadows",
