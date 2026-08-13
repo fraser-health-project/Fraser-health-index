@@ -272,14 +272,22 @@ pillar_columns = {
        'Depressive Moods', 'Antipsychotic use (Potentially Innapropriate)']}
 highlight_columns = [ 'ED_visit_rate', 'incompletion_percent', 'Wait before initial assesment (ED)', 'Acute bed shortage', 'Procedure and surgical wait',
                      'Seniors (65+)', 'Population', 'Population growth', 'All patient readmissions', 'Specialized readmission']
-def get_top_rankings(municipality, df, columns, top_n_threshold=3):
+def get_top_rankings(municipality,df,columns,top_n_threshold=3):
     highlights = []
     for col in columns:
         ranked = df[["Municipality", col]].copy()
-        ranked["_rank"] = ranked[col].rank(ascending=False, method="min").astype(int)
-        muni_rank = ranked.loc[ranked["Municipality"] == municipality, "_rank"].values[0]
+        ranked["_rank"] = ranked[col].rank(
+            ascending=False,
+            method="min")
+        muni_rank = ranked.loc[
+            ranked["Municipality"] == municipality,
+            "_rank"
+        ].values
+        if len(muni_rank) == 0 or pd.isna(muni_rank[0]):
+            continue
+        muni_rank = int(muni_rank[0])
         if muni_rank <= top_n_threshold:
-            suffix = {1: "st", 2: "nd", 3: "rd"}.get(muni_rank, "th")
+            suffix = { 1: "st", 2: "nd", 3: "rd"}.get(muni_rank, "th")
             highlights.append(f"{muni_rank}{suffix} highest in {col}")
     return highlights
     
@@ -300,7 +308,7 @@ if page == "Overview":
         if pillar_total != 100:
             st.warning(f"Pillar weights sum to {pillar_total}, not 100.")
 
-        with st.popover("⚙️ Advanced Settings"):
+        with st.popover("Advanced Settings"):
             st.markdown("Adjust the weight of each individual variable within its pillar.")
             variable_weights = {}
             for pillar_name, cols in pillar_columns.items():
