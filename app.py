@@ -66,4 +66,4 @@ for _, row in ranking.iterrows():
 
 
 ## STEP 2
-components = pd.read_csv("data/pillar_components.csv")
+#components = pd.read_csv("data/pillar_components.csv")
