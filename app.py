@@ -300,17 +300,43 @@ if page == "Overview":
     st.markdown("An interactive tool ranking and grouping hospital systems' need across the Fraser Health Region.")
     if "expanded_muni" not in st.session_state:
         st.session_state.expanded_muni = None
-    main_col, control_col = st.columns([3, 1])
+    main_col, control_col = st.columns([3.5, 1],gap="large")
 
-    with control_col:
-        st.markdown("#### Pillar Weights")
-        dem = st.slider("Demand", 0, 100, 25)
-        cap = st.slider("Capacity", 0, 100, 25)
-        vul = st.slider("Vulnerable Populations", 0, 100, 25)
-        unmet = st.slider("Unmet Need", 0, 100, 25)
-        pillar_total = dem + cap + vul + unmet
-        if pillar_total != 100:
-            st.warning(f"Pillar weights sum to {pillar_total}, not 100.")
+    dem = st.slider( "Demand", 0, 100, 25, key="pillar_demand")
+    cap = st.slider(
+    "Capacity",
+    0, 100, 25,
+    key="pillar_capacity")
+
+    vul = st.slider(
+    "Vulnerable Populations",
+    0, 100, 25,
+    key="pillar_vulnerable")
+
+    unmet = st.slider(
+    "Unmet Need",
+    0, 100, 25,
+    key="pillar_unmet")
+
+    pillar_total = dem + cap + vul + unmet
+
+    if pillar_total == 0:
+
+        pillar_weights_normalized = {
+        "Demand": 0.25,
+        "Capacity": 0.25,
+        "Vulnerable Populations": 0.25,
+        "Unmet Need and Outcomes": 0.25
+    }
+
+    else:
+
+        pillar_weights_normalized = {
+        "Demand": dem / pillar_total,
+        "Capacity": cap / pillar_total,
+        "Vulnerable Populations": vul / pillar_total,
+        "Unmet Need and Outcomes": unmet / pillar_total
+    }
 
         with st.popover("Advanced Settings"):
             st.markdown("Adjust the weight of each individual variable within its pillar.")
@@ -320,20 +346,18 @@ if page == "Overview":
                 even_split = round(100 / len(cols))
                 pillar_var_weights = {}
                 for col in cols:
-                    pillar_var_weights[col] = st.slider(col, 0, 100, even_split, key=f"adv_{col}")
-                var_total = sum(pillar_var_weights.values())
-                if var_total != 100:
-                    st.caption(f"⚠️ {pillar_name} weights sum to {var_total}, not 100.")
-                variable_weights[pillar_name] = pillar_var_weights
+                    pillar_var_weights[col] = st.slider(col,0,100,even_split,key=f"adv_{col}")
+                    var_total = sum(pillar_var_weights.values())
+                if var_total == 0:
+                    variable_weights[pillar_name] = {col: 1 / len(cols)
+                    for col in cols}
 
     with main_col:
         # Stage 1: individual variables -> live pillar Z-score
         live_pillars = pd.DataFrame({"Municipality": components["Municipality"]})
         for pillar_name, cols in pillar_columns.items():
-            weights_normalized = {c: variable_weights[pillar_name][c] / 100 for c in cols}
-            live_pillars[pillar_name + " Z (live)"] = sum(
-                components[c] * w for c, w in weights_normalized.items()
-            )
+            weights_normalized = {c: variable_weights[pillar_name][c]
+            for c in cols}
 
         # Stage 2: live pillar scores -> final Need Index
         pillar_weights_normalized = {
@@ -364,7 +388,6 @@ if page == "Overview":
             }
             .rank-number { font-size: 40px; font-weight: 800; margin-bottom: 8px; }
             .municipality-name { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
-            .need-score { font-size: 17px; }
             </style>
             """,
             unsafe_allow_html=True
@@ -377,8 +400,6 @@ for _, row in ranking.iterrows():
 <div class="ranking-card">
     <div class="rank-number">#{int(row['Rank'])}</div>
     <div class="municipality-name">{muni}</div>
-    <div class="need-score">
-        Need Index: <strong>{row['Live Need Index']:.4f}</strong>
     </div>
 </div>
 """
@@ -386,8 +407,9 @@ for _, row in ranking.iterrows():
 
     if st.button(f"View {muni} details", key=f"btn_{muni}"):
         st.session_state.expanded_muni = None if st.session_state.expanded_muni == muni else muni
-
     if st.session_state.expanded_muni == muni:
+    st.markdown(f"### {muni} — Need Index")
+    st.metric("Live Need Index",f"{row['Live Need Index']:.4f}")
         profile_row = profiles[profiles["Municipality"] == muni]
         if not profile_row.empty:
             profile_row = profile_row.iloc[0]
