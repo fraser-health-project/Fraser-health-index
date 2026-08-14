@@ -294,52 +294,53 @@ def get_top_rankings(municipality,df,columns,top_n_threshold=3):
             highlights.append(f"{muni_rank}{suffix} highest in {col}")
     return highlights
     
-#Overview Page
+## OVerview Page
 if page == "Overview":
     st.title("Fraser Health Needs Index")
-    st.markdown("An interactive tool ranking and grouping hospital systems' need across the Fraser Health Region.")
+    st.markdown(
+        "An interactive tool ranking and grouping hospital systems' "
+        "need across the Fraser Health Region.")
     if "expanded_muni" not in st.session_state:
         st.session_state.expanded_muni = None
-    main_col, control_col = st.columns([3.5, 1],gap="large")
-
-    dem = st.slider( "Demand", 0, 100, 25, key="pillar_demand")
-    cap = st.slider(
-    "Capacity",
-    0, 100, 25,
-    key="pillar_capacity")
-
-    vul = st.slider(
-    "Vulnerable Populations",
-    0, 100, 25,
-    key="pillar_vulnerable")
-
-    unmet = st.slider(
-    "Unmet Need",
-    0, 100, 25,
-    key="pillar_unmet")
-
-    pillar_total = dem + cap + vul + unmet
+    main_col, control_col = st.columns(
+        [3.5, 1],
+        gap="large")
+with control_col:
+        st.markdown("### Pillar Weights")
+        dem = st.slider( "Demand",
+            0,
+            100,
+            25,
+            key="pillar_demand")
+        cap = st.slider("Capacity",
+            0,
+            100,
+            25,
+            key="pillar_capacity")
+        vul = st.slider( "Vulnerable Populations",
+            0,
+            100,
+            25,
+            key="pillar_vulnerable")
+ unmet = st.slider( "Unmet Need",
+            0,
+            100,
+            25,
+            key="pillar_unmet")
+pillar_total = dem + cap + vul + unmet
 
     if pillar_total == 0:
-
         pillar_weights_normalized = {
-        "Demand": 0.25,
-        "Capacity": 0.25,
-        "Vulnerable Populations": 0.25,
-        "Unmet Need and Outcomes": 0.25
-    }
-
+            "Demand": 0.25,
+            "Capacity": 0.25,
+            "Vulnerable Populations": 0.25,
+            "Unmet Need and Outcomes": 0.25}
     else:
-
         pillar_weights_normalized = {
-        "Demand": dem / pillar_total,
-        "Capacity": cap / pillar_total,
-        "Vulnerable Populations": vul / pillar_total,
-        "Unmet Need and Outcomes": unmet / pillar_total
-    }
-# Default variable weights from Jupyter
-# Enter the weights you used when calculating the original index.
-
+            "Demand": dem / pillar_total,
+            "Capacity": cap / pillar_total,
+            "Vulnerable Populations": vul / pillar_total,
+            "Unmet Need and Outcomes": unmet / pillar_total}
 DEFAULT_VARIABLE_WEIGHTS = { "Demand": { "ED_visit_rate": 20,"acute_hospital_rate": 25,"ACSC_avg": 5,"procedure_demand_rate": 20,"incompletion_percent": 30},
         "Capacity": {"Acute bed shortage": 12.5, "Resource Use Intensity": 12.5 , "Facilities": 10, "Wait before initial assesment (ED)": 12.5, 
                      "90th percentile ED wait time": 15, "Days in alternate levels of care": 12.5,"Procedure and surgical wait": 15,"Patients admitted through ED": 10},
@@ -374,78 +375,104 @@ with st.popover("Advanced Settings"):
             variable_weights[pillar_name] = {
                 col: pillar_var_weights[col] / var_total
                 for col in cols}
-    with main_col:
-        # Stage 1: individual variables -> live pillar Z-score
-        live_pillars = pd.DataFrame({"Municipality": components["Municipality"]})
-        for pillar_name, cols in pillar_columns.items():
-            weights_normalized = {c: variable_weights[pillar_name][c]
-            for c in cols}
-
-        # Stage 2: live pillar scores -> final Need Index
-        pillar_weights_normalized = {
-            "Demand": dem / 100, "Capacity": cap / 100,
-            "Vulnerable Populations": vul / 100, "Unmet Need and Outcomes": unmet / 100
-        }
-        live_pillars["Live Need Index"] = sum(
-            live_pillars[p + " Z (live)"] * w for p, w in pillar_weights_normalized.items()
-        )
-
-        ranking = live_pillars[["Municipality", "Live Need Index"]].merge(
-            final_df[["Municipality", "Cluster_Label"]], on="Municipality"
-        ).sort_values("Live Need Index", ascending=False).reset_index(drop=True)
-        ranking["Rank"] = range(1, len(ranking) + 1)
-
-        st.subheader("Municipality Ranking")
-
-        st.markdown(
-            """
-            <style>
-            .ranking-card {
+with main_col:
+        live_pillars = pd.DataFrame({ "Municipality": components["Municipality"]})
+for pillar_name, cols in pillar_columns.items():
+            weighted_components = []
+            for col in cols:
+                if col not in components.columns:
+                    st.error(f"Column '{col}' is missing from ""pillar_components.csv.")
+                    continue
+                series = pd.to_numeric(components[col],errors="coerce")
+                mean = series.mean()
+                std = series.std()
+                if pd.isna(std) or std == 0:
+                    z = pd.Series(0,index=series.index)
+                else:
+                    z = (series.fillna(mean) - mean) / std
+                weight = variable_weights[
+                    pillar_name
+                ][col]
+                weighted_components.append(z * weight)
+                if weighted_components:
+                    live_pillars[pillar_name + " Z (live)"] = sum(weighted_components)
+                else:
+                    live_pillars[pillar_name + " Z (live)"] = 0
+live_pillars["Live Need Index"] = (live_pillars[ "Demand z (live)"]* pillar_weights_normalized["Demand"] + live_pillars["Capacity z (live)"] * pillar_weights_normalized["Capacity"] + live_pillars["Vulnerable Populations z (live)"]*pillar_weights_normalized["Vulnerable Populations"]+ live_pillars["Unmet Need and Outcomes z (live)"]*pillar_weights_normalized["Unmet Need and Outcomes"])
+ranking = (live_pillars[[ "Municipality","Live Need Index"]] .merge(final_df[["Municipality","Cluster_Label"]],on="Municipality",how="left")
+                       .sort_values("Live Need Index", ascending = False).reset_index(drop=True))
+ranking["Rank"] = range(1, len(ranking) + 1)
+st.subheader("Municipality Ranking")
+st.markdown(
+    """
+    <style>
+    .ranking-card {
                 background-color: #1E222B;
                 border: 1px solid #3A3F4B;
                 border-left: 8px solid #E74C3C;
                 border-radius: 16px;
                 padding: 22px 28px;
-                margin-bottom: 4px;
-            }
-            .rank-number { font-size: 40px; font-weight: 800; margin-bottom: 8px; }
-            .municipality-name { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
-            </style>
-            """,
-            unsafe_allow_html=True
-        )
+                margin-bottom: 4px;}
+    .rank-number {
+        font-size: 40px;
+        font-weight: 800;
+        margin-bottom: 8px;}    
+    .municipality-name {
+                font-size: 28px;
+                font-weight: 700;
+                margin-bottom: 8px;}
+    </style>
+    """,
+    unsafe_allow_html=True)
+ stats_source = components.copy()
+ for _, row in ranking.iterrows():
+     muni = row["Municipality"]
+     card_html = f"""
+            <div class="ranking-card">
 
-        stats_source = components.merge(final_df[["Municipality"]], on="Municipality")
-for _, row in ranking.iterrows():
-    muni = row["Municipality"]
-    card_html = f"""
-<div class="ranking-card">
-    <div class="rank-number">#{int(row['Rank'])}</div>
-    <div class="municipality-name">{muni}</div>
-    </div>
-</div>
-"""
-    st.markdown(card_html, unsafe_allow_html=True)
+                <div class="rank-number">
+                    #{int(row["Rank"])}
+                </div>
 
-    if st.button(f"View {muni} details", key=f"btn_{muni}"):
-        st.session_state.expanded_muni = None if st.session_state.expanded_muni == muni else muni
-    if st.session_state.expanded_muni == muni:
-        st.markdown(f"### {muni} — Need Index")
-        st.metric("Live Need Index",f"{row['Live Need Index']:.4f}")
-        profile_row = profiles[profiles["Municipality"] == muni]
-        if not profile_row.empty:
-            profile_row = profile_row.iloc[0]
-            st.markdown(profile_row["Blurb"])
-        else:
-            st.markdown("_Profile not yet written for this municipality._")
+                <div class="municipality-name">
+                    {muni}
+                </div>
 
-        st.markdown("**Notable Stats**")
-        highlights = get_top_rankings(muni, stats_source, highlight_columns)
-        if highlights:
-            for h in highlights:
-                st.markdown(f"- {h}")
-        else:
-            st.markdown("_No top-3 rankings in the highlighted categories._")
+            </div>
+            """
+            st.markdown(card_html,unsafe_allow_html=True)
+           if st.button( f"View {muni} details",key=f"btn_{muni}"):
+                if ( st.session_state.expanded_muni == muni):
+                    st.session_state.expanded_muni = None
+                else:
+                    st.session_state.expanded_muni = muni
+             if ( st.session_state.expanded_muni == muni):
+                st.markdown(f"### {muni} — Need Index")
+                st.metric("Live Need Index", f"{row['Live Need Index']:.4f}" )
+                profile_row = profiles[profiles["Municipality"] == muni]
+                if not profile_row.empty:
+                    profile_row = profile_row.iloc[0]
+                    st.markdown(profile_row["Blurb"])
+                else:
+                    st.markdown("A profile has not been written yet")
+                 st.markdown( "**Notable Stats**")
+                 highlights = get_top_rankings(muni,stats_source,highlight_columns)
+                 if highlights:
+                     for h in highlights:
+                        st.markdown(f"- {h}")
+                 else:
+                    st.markdown("Does not have notable statistics within these categories")
+                st.caption(f"Cluster: {row['Cluster_Label']}")
 
-        st.caption(f"Cluster: {row['Cluster_Label']}")
-   
+
+            
+
+
+
+
+
+
+
+
+
+
