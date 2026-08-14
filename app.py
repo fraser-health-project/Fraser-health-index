@@ -391,9 +391,8 @@ with main_col:
     ranking = live_pillars[["Municipality", "Live Need Index"]].merge(final_df[["Municipality", "Cluster_Label"]], on="Municipality").sort_values("Live Need Index", ascending=False).reset_index(drop=True)
     ranking["Rank"] = range(1, len(ranking) + 1)
 
-        st.subheader("Municipality Ranking")
-
-        st.markdown(
+    st.subheader("Municipality Ranking")
+    st.markdown(
             """
             <style>
             .ranking-card {
