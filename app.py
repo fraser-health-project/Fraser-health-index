@@ -348,6 +348,9 @@ DEFAULT_VARIABLE_WEIGHTS = { "Demand": { "ED_visit_rate": 20,"acute_hospital_rat
         "Unmet Need and Outcomes": {"Deaths following major surgery": 15,"All patient readmissions": 15,"Specialized readmission": 10,"In Hospital Sepsis": 12.5,
         "LTC fall rate": 12.5,"Pressure Ulcers": 10,"Depressive Moods": 12.5,"Antipsychotic use (Potentially Innapropriate)": 12.5}}
 
+st.write("Available columns:", live_pillars.columns.tolist())
+st.write("Pillar weights keys:", list(pillar_weights.keys()))
+
 with st.popover("Advanced Settings"):
     st.markdown("Adjust the weight of each individual variable within its pillar.")
     variable_weights = {}
