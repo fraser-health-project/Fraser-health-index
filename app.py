@@ -455,17 +455,19 @@ final_df["Need_Index_Size"] = final_df["Need Index"] - final_df["Need Index"].mi
 ## Map page
     #st.dataframe(final_df[["Municipality", "lat", "lon", "Need Index", "Need_Index_Size"]])
 if page == "View By Map":
-    st.subheader("Test Map")
-    test_df = pd.DataFrame({
-        "Municipality": ["Surrey", "Abbotsford", "Delta"],
-        "lat": [49.1913, 49.0504, 49.0847],
-        "lon": [-122.8490, -122.3045, -123.0587],
-        "value": [10, 20, 30]})
-    fig_test = px.scatter_map(
-        test_df, lat="lat", lon="lon",
-        size="value", hover_name="Municipality",
-        map_style="open-street-map", zoom=8, height=500)
-    st.plotly_chart(fig_test, use_container_width=True)
+    st.subheader("Need Across the Region")
+    final_df["lat"] = pd.to_numeric(final_df["lat"], errors="coerce")
+    final_df["lon"] = pd.to_numeric(final_df["lon"], errors="coerce")
+    final_df["Need_Index_Size"] = final_df["Need Index"] - final_df["Need Index"].min() + 1
+    fig_map = px.scatter_map(
+        final_df, lat="lat", lon="lon",
+        color="Need Index",
+        size="Need_Index_Size",
+        hover_name="Municipality",
+        hover_data=["Cluster_Label", "Rank"],
+        map_style="open-street-map",
+        zoom=8, height=600)
+    st.plotly_chart(fig_map, use_container_width=True)
 """
 fig_map = px.scatter_map(
     final_df, lat="lat", lon="lon",
