@@ -348,16 +348,23 @@ DEFAULT_VARIABLE_WEIGHTS = { "Demand": { "ED_visit_rate": 20,"acute_hospital_rat
         "Unmet Need and Outcomes": {"Deaths following major surgery": 15,"All patient readmissions": 15,"Specialized readmission": 10,"In Hospital Sepsis": 12.5,
         "LTC fall rate": 12.5,"Pressure Ulcers": 10,"Depressive Moods": 12.5,"Antipsychotic use (Potentially Innapropriate)": 12.5}}
 
+def zscore(series):
+    series = pd.to_numeric(series, errors="coerce")
+    mean = series.mean()
+    std = series.std()
+    if pd.isna(std) or std == 0:
+        return pd.Series(0, index=series.index)
+    return (series.fillna(mean) - mean) / std
+    
 with st.popover("Advanced Settings"):
     st.markdown("Adjust the weight of each individual variable within its pillar.")
     variable_weights = {}
     for pillar_name, cols in pillar_columns.items():
         st.markdown(f"**{pillar_name}**")
-        even_split = round(100 / len(cols))
         pillar_var_weights = {}
         for col in cols:
             default_value = DEFAULT_VARIABLE_WEIGHTS[pillar_name][col]
-            pillar_var_weights[col] = st.slider(col,0,100,even_split,key=f"adv_{col}")
+            pillar_var_weights[col] = st.slider(col,min_value=0.0,max_value=100.0,value=float(default_value),step=0.5,key=f"adv_{col}")
         var_total = sum(pillar_var_weights.values())
         if var_total == 0:
             variable_weights[pillar_name] = {
