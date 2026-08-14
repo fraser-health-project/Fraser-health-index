@@ -362,7 +362,7 @@ with st.popover("Advanced Settings"):
         pillar_var_weights = {}
         for col in cols:
             default_value = DEFAULT_VARIABLE_WEIGHTS[pillar_name][col]
-            pillar_var_weights[col] = st.slider(col,0,100,even_split,key=f"adv_{col}")
+            pillar_var_weights[col] = st.slider(col, 0, 100, float(default_value), step=0.5, key=f"adv_{col}")
         var_total = sum(pillar_var_weights.values())
         if var_total == 0:
             variable_weights[pillar_name] = {
