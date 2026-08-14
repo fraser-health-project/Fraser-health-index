@@ -337,7 +337,6 @@ if page == "Overview":
             "Population": 25,"Unemployed": 12.5,"Population growth": 12.5,"High hospital bed users": 10},
             "Unmet Need and Outcomes": {"Deaths following major surgery": 15,"All patient readmissions": 15,"Specialized readmission": 10,"In Hospital Sepsis": 12.5,
             "LTC fall rate": 12.5,"Pressure Ulcers": 10,"Depressive Moods": 12.5,"Antipsychotic use (Potentially Innapropriate)": 12.5}}
-
         with st.popover("Advanced Settings"):
             st.markdown("Adjust the weight of each individual variable within its pillar, the current weights were determined based on contrast and (subjective) importance")
             variable_weights = {}
