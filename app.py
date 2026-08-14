@@ -386,6 +386,7 @@ with main_col:
                 border-radius: 16px;
                 padding: 22px 28px;
                 margin-bottom: 4px;
+                max-width: 480px;
             }
             .rank-number { font-size: 40px; font-weight: 800; margin-bottom: 8px; }
             .municipality-name { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
