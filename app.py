@@ -423,7 +423,7 @@ st.markdown(
     </style>
     """,
     unsafe_allow_html=True)
- stats_source = components.copy()
+    stats_source = components.copy()
  for _, row in ranking.iterrows():
      muni = row["Municipality"]
      card_html = f"""
