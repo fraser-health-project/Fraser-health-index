@@ -451,10 +451,9 @@ if page == "Overview":
                 st.markdown("_No top-3 rankings in the highlighted categories._")
 
             st.caption(f"Cluster: {row['Cluster_Label']}")
-
-## Map page
 final_df["Need_Index_Size"] = final_df["Need Index"] - final_df["Need Index"].min() + 1
-
+## Map page
+st.dataframe(final_df[["Municipality", "lat", "lon", "Need Index", "Need_Index_Size"]])
 fig_map = px.scatter_map(
     final_df, lat="lat", lon="lon",
     color="Need Index",           # can be negative — color scales handle this fine
