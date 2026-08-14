@@ -393,11 +393,11 @@ for pillar_name, cols in pillar_columns.items():
                     pillar_name
                 ][col]
                 weighted_components.append(z * weight)
-                if weighted_components:
-                    live_pillars[pillar_name + " Z (live)"] = sum(weighted_components)
-                else:
-                    live_pillars[pillar_name + " Z (live)"] = 0
-live_pillars["Live Need Index"] = (live_pillars[ "Demand z (live)"]* pillar_weights_normalized["Demand"] + live_pillars["Capacity z (live)"] * pillar_weights_normalized["Capacity"] + live_pillars["Vulnerable Populations z (live)"]*pillar_weights_normalized["Vulnerable Populations"]+ live_pillars["Unmet Need and Outcomes z (live)"]*pillar_weights_normalized["Unmet Need and Outcomes"])
+            if weighted_components:
+                live_pillars[pillar_name + " Z (live)"] = sum(weighted_components)
+            else:
+                live_pillars[pillar_name + " Z (live)"] = 0
+live_pillars["Live Need Index"] = (live_pillars[ "Demand Z (live)"]* pillar_weights_normalized["Demand"] + live_pillars["Capacity Z (live)"] * pillar_weights_normalized["Capacity"] + live_pillars["Vulnerable Populations Z (live)"]*pillar_weights_normalized["Vulnerable Populations"]+ live_pillars["Unmet Need and Outcomes Z (live)"]*pillar_weights_normalized["Unmet Need and Outcomes"])
 ranking = (live_pillars[[ "Municipality","Live Need Index"]] .merge(final_df[["Municipality","Cluster_Label"]],on="Municipality",how="left")
                        .sort_values("Live Need Index", ascending = False).reset_index(drop=True))
 ranking["Rank"] = range(1, len(ranking) + 1)
@@ -440,7 +440,7 @@ for _, row in ranking.iterrows():
             </div>
             """
     st.markdown(card_html,unsafe_allow_html=True)
-if st.button( f"View {muni} details",key=f"btn_{muni}"):
+    if st.button( f"View {muni} details",key=f"btn_{muni}"):
         if ( st.session_state.expanded_muni == muni):
             st.session_state.expanded_muni = None
         else:
