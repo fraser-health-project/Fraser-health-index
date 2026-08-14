@@ -453,7 +453,21 @@ if page == "Overview":
             st.caption(f"Cluster: {row['Cluster_Label']}")
 final_df["Need_Index_Size"] = final_df["Need Index"] - final_df["Need Index"].min() + 1
 ## Map page
-#st.dataframe(final_df[["Municipality", "lat", "lon", "Need Index", "Need_Index_Size"]])
+    #st.dataframe(final_df[["Municipality", "lat", "lon", "Need Index", "Need_Index_Size"]])
+st.subheader("Test Map")
+    test_df = pd.DataFrame({
+        "Municipality": ["Surrey", "Abbotsford", "Delta"],
+        "lat": [49.1913, 49.0504, 49.0847],
+        "lon": [-122.8490, -122.3045, -123.0587],
+        "value": [10, 20, 30]
+    })
+    fig_test = px.scatter_map(
+        test_df, lat="lat", lon="lon",
+        size="value", hover_name="Municipality",
+        map_style="open-street-map", zoom=8, height=500
+    )
+    st.plotly_chart(fig_test, use_container_width=True)
+"""
 fig_map = px.scatter_map(
     final_df, lat="lat", lon="lon",
     color="Need Index",           # can be negative — color scales handle this fine
@@ -462,5 +476,5 @@ fig_map = px.scatter_map(
     hover_data=["Cluster_Label", "Rank"],
     map_style="open-street-map",
     zoom=8, height=600)
-
+"""
 
