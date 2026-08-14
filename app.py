@@ -439,7 +439,7 @@ for _, row in ranking.iterrows():
 
             </div>
             """
-            st.markdown(card_html,unsafe_allow_html=True)
+    st.markdown(card_html,unsafe_allow_html=True)
            if st.button( f"View {muni} details",key=f"btn_{muni}"):
                 if ( st.session_state.expanded_muni == muni):
                     st.session_state.expanded_muni = None
