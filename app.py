@@ -454,14 +454,14 @@ if st.button( f"View {muni} details",key=f"btn_{muni}"):
                     st.markdown(profile_row["Blurb"])
                 else:
                     st.markdown("A profile has not been written yet")
-                 st.markdown( "**Notable Stats**")
-                 highlights = get_top_rankings(muni,stats_source,highlight_columns)
-                 if highlights:
-                     for h in highlights:
-                        st.markdown(f"- {h}")
-                 else:
-                    st.markdown("Does not have notable statistics within these categories")
-                st.caption(f"Cluster: {row['Cluster_Label']}")
+st.markdown( "**Notable Stats**")
+highlights = get_top_rankings(muni,stats_source,highlight_columns)
+if highlights:
+    for h in highlights:
+    st.markdown(f"- {h}")
+else:
+    st.markdown("Does not have notable statistics within these categories")
+st.caption(f"Cluster: {row['Cluster_Label']}")
 
 
             
