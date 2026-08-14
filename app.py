@@ -293,6 +293,14 @@ def get_top_rankings(municipality,df,columns,top_n_threshold=3):
             suffix = { 1: "st", 2: "nd", 3: "rd"}.get(muni_rank, "th")
             highlights.append(f"{muni_rank}{suffix} highest in {col}")
     return highlights
+
+def zscore(series):
+    series = pd.to_numeric(series, errors="coerce")
+    mean = series.mean()
+    std = series.std()
+    if pd.isna(std) or std == 0:
+        return pd.Series(0, index=series.index)
+    return (series.fillna(mean) - mean) / std
     
 ## OVerview Page
 if page == "Overview":
