@@ -464,18 +464,10 @@ if page == "View By Map":
         color="Need Index",
         size="Need_Index_Size",
         hover_name="Municipality",
-        hover_data=["Cluster_Label", "Rank"],
+        hover_data={"Cluster_Label": True,"Rank": True,"Need Index": False,"Need_Index_Size": False,"lat": False,"lon": False},
+        labels={"Cluster_Label" : "Grouping", "Rank" : "Rank"},
         map_style="open-street-map",
         zoom=8, height=600)
     st.plotly_chart(fig_map, use_container_width=True)
-"""
-fig_map = px.scatter_map(
-    final_df, lat="lat", lon="lon",
-    color="Need Index",           # can be negative — color scales handle this fine
-    size="Need_Index_Size",       # always positive — safe for marker size
-    hover_name="Municipality",
-    hover_data=["Cluster_Label", "Rank"],
-    map_style="open-street-map",
-    zoom=8, height=600)
-"""
+
 
