@@ -453,14 +453,14 @@ if page == "Overview":
             st.caption(f"Cluster: {row['Cluster_Label']}")
 final_df["Need_Index_Size"] = final_df["Need Index"] - final_df["Need Index"].min() + 1
 ## Map page
-st.dataframe(final_df[["Municipality", "lat", "lon", "Need Index", "Need_Index_Size"]])
+#st.dataframe(final_df[["Municipality", "lat", "lon", "Need Index", "Need_Index_Size"]])
 fig_map = px.scatter_map(
     final_df, lat="lat", lon="lon",
     color="Need Index",           # can be negative — color scales handle this fine
     size="Need_Index_Size",       # always positive — safe for marker size
     hover_name="Municipality",
     hover_data=["Cluster_Label", "Rank"],
-    map_style="carto-positron",
+    map_style="open-street-map",
     zoom=8, height=600)
 
 
