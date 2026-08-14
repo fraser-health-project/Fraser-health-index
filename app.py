@@ -358,7 +358,7 @@ with main_col:
             if col not in components.columns:
                 continue
             z = zscore(components[col])
-            weight = variable_weights[pillar_name][col]
+            weight = variable_weights.get(pillar_name, {}).get(col, 1)
             weighted_components.append(z * weight)
         if weighted_components:
             pillar_scores[pillar_name] = sum(weighted_components)
