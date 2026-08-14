@@ -453,7 +453,17 @@ if page == "Overview":
             st.caption(f"Cluster: {row['Cluster_Label']}")
 
 ## Map page
-
+if page == "View By Map":
+    st.subheader("Need Across the Region")
+    fig_map = px.scatter_mapbox(
+        final_df, lat="lat", lon="lon",
+        color="Need Index", size="Need Index",
+        hover_name="Municipality",
+        hover_data=["Cluster_Label", "Rank"],
+        mapbox_style="carto-positron",
+        zoom=8, height=600
+    )
+    st.plotly_chart(fig_map, use_container_width=True)
 
 
 
