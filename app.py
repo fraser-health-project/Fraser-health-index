@@ -354,7 +354,7 @@ DEFAULT_VARIABLE_WEIGHTS = { "Demand": { "ED_visit_rate": 20,"acute_hospital_rat
         "LTC fall rate": 12.5,"Pressure Ulcers": 10,"Depressive Moods": 12.5,"Antipsychotic use (Potentially Innapropriate)": 12.5}}
 
 with st.popover("Advanced Settings"):
-    st.markdown("Adjust the weight of each individual variable within its pillar.")
+    st.markdown("Adjust the weight of each individual variable within its pillar, the current weights were determined based on contrast and (subjective) importance")
     variable_weights = {}
     for pillar_name, cols in pillar_columns.items():
         st.markdown(f"**{pillar_name}**")
