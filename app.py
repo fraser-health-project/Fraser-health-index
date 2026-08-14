@@ -440,12 +440,12 @@ for _, row in ranking.iterrows():
             </div>
             """
     st.markdown(card_html,unsafe_allow_html=True)
-           if st.button( f"View {muni} details",key=f"btn_{muni}"):
-                if ( st.session_state.expanded_muni == muni):
-                    st.session_state.expanded_muni = None
-                else:
-                    st.session_state.expanded_muni = muni
-             if ( st.session_state.expanded_muni == muni):
+        if st.button( f"View {muni} details",key=f"btn_{muni}"):
+            if ( st.session_state.expanded_muni == muni):
+                st.session_state.expanded_muni = None
+            else:
+                 st.session_state.expanded_muni = muni
+            if ( st.session_state.expanded_muni == muni):
                 st.markdown(f"### {muni} — Need Index")
                 st.metric("Live Need Index", f"{row['Live Need Index']:.4f}" )
                 profile_row = profiles[profiles["Municipality"] == muni]
