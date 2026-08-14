@@ -308,7 +308,7 @@ if page == "Overview":
     st.markdown("An interactive tool ranking and grouping hospital systems' need across the Fraser Health Region.")
     if "expanded_muni" not in st.session_state:
         st.session_state.expanded_muni = None
-    main_col, control_col = st.columns([4, 1],gap="large")
+    main_col, control_col = st.columns([2, 1],gap="large")
     with control_col:
         dem = st.slider( "Demand", 0, 100, 25, key="pillar_demand")
         cap = st.slider("Capacity",0, 100, 25,key="pillar_capacity")
