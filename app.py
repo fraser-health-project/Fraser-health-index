@@ -338,18 +338,17 @@ if page == "Overview":
             st.markdown(f"**{pillar_name}**")
             even_split = round(100 / len(cols))
             pillar_var_weights = {}
-        for col in cols:
-            default_value = DEFAULT_VARIABLE_WEIGHTS[pillar_name][col]
-            pillar_var_weights[col] = st.slider(col, 0.0, 100.0, float(default_value), step=0.5, key=f"adv_{col}")
-            var_total = sum(pillar_var_weights.values())
-            if var_total == 0:
-                variable_weights[pillar_name] = {
-                    col: 1 / len(cols)
-                    for col in cols}
-            else:
-                variable_weights[pillar_name] = {
-                    col: pillar_var_weights[col] / var_total
-                    for col in cols}
+            for i, col in enumerate(cols):
+                default_value = DEFAULT_VARIABLE_WEIGHTS.get(pillar_name, {}).get(col, round(100 / len(cols), 1))
+                widget_key = f"adv_{pillar_name}_{i}"   # ← unique per pillar+position, avoids key collisions
+                pillar_var_weights[col] = st.slider(col, 0.0, 100.0, float(default_value), step=0.5, key=widget_key)
+        var_total = sum(pillar_var_weights.values())
+        if var_total == 0:
+            variable_weights[pillar_name] = {col: 1 / len(cols) for col in cols}
+        else:
+            variable_weights[pillar_name] = {
+                col: pillar_var_weights.get(col, 0) / var_total
+                for col in cols}
 with main_col:
     live_pillars = pd.DataFrame({"Municipality": components["Municipality"]})
     pillar_scores = {}
@@ -376,8 +375,6 @@ with main_col:
         * pillar_weights_normalized["Unmet Need and Outcomes"])
     ranking = live_pillars[["Municipality", "Live Need Index"]].merge(final_df[["Municipality", "Cluster_Label"]], on="Municipality").sort_values("Live Need Index", ascending=False).reset_index(drop=True)
     ranking["Rank"] = range(1, len(ranking) + 1)
-st.write("cols:", cols)
-st.write("pillar_var_weights keys:", list(pillar_var_weights.keys()))
     st.subheader("Municipality Ranking")
     st.markdown(
             """
