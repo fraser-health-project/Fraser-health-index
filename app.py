@@ -364,22 +364,30 @@ with st.popover("Advanced Settings"):
             variable_weights[pillar_name] = {
                 col: pillar_var_weights[col] / var_total
                 for col in cols}
-    with main_col:
-        # Stage 1: individual variables -> live pillar Z-score
-        live_pillars = pd.DataFrame({"Municipality": components["Municipality"]})
-        for pillar_name, cols in pillar_columns.items():
-            weights_normalized = {c: variable_weights[pillar_name][c]
-            for c in cols}
-
-        # Stage 2: live pillar scores -> final Need Index
-        pillar_weights_normalized = {
-            "Demand": dem / 100, "Capacity": cap / 100,
-            "Vulnerable Populations": vul / 100, "Unmet Need and Outcomes": unmet / 100
-        }
-        live_pillars["Live Need Index"] = sum(
-            live_pillars[p + " Z (live)"] * w for p, w in pillar_weights_normalized.items()
-        )
-
+   with main_col:
+    live_pillars = pd.DataFrame({"Municipality": components["Municipality"]})
+    pillar_scores = {}
+    for pillar_name, cols in pillar_columns.items():
+        weighted_components = []
+        for col in cols:
+            if col not in components.columns:
+                continue
+            z = zscore(components[col])
+            weight = variable_weights[pillar_name][col]
+            weighted_components.append(z * weight)
+        if weighted_components:
+            pillar_scores[pillar_name] = sum(weighted_components)
+        else:
+            pillar_scores[pillar_name] = pd.Series(0,index=components.index)
+    live_pillars["Live Need Index"] = (
+        pillar_scores["Demand"]
+        * pillar_weights_normalized["Demand"]
+        + pillar_scores["Capacity"]
+        * pillar_weights_normalized["Capacity"]
+        + pillar_scores["Vulnerable Populations"]
+        * pillar_weights_normalized["Vulnerable Populations"]
+        + pillar_scores["Unmet Need and Outcomes"]
+        * pillar_weights_normalized["Unmet Need and Outcomes"])
         ranking = live_pillars[["Municipality", "Live Need Index"]].merge(
             final_df[["Municipality", "Cluster_Label"]], on="Municipality"
         ).sort_values("Live Need Index", ascending=False).reset_index(drop=True)
