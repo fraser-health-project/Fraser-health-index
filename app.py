@@ -328,15 +328,14 @@ with control_col:
             25,
             key="pillar_unmet")
 pillar_total = dem + cap + vul + unmet
-
-    if pillar_total == 0:
-        pillar_weights_normalized = {
+if pillar_total == 0:
+    pillar_weights_normalized = {
             "Demand": 0.25,
             "Capacity": 0.25,
             "Vulnerable Populations": 0.25,
             "Unmet Need and Outcomes": 0.25}
-    else:
-        pillar_weights_normalized = {
+else:
+    pillar_weights_normalized = {
             "Demand": dem / pillar_total,
             "Capacity": cap / pillar_total,
             "Vulnerable Populations": vul / pillar_total,
