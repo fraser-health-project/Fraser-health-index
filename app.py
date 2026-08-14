@@ -1,3 +1,4 @@
+##Imports
 import streamlit as st
 import pandas as pd
 import plotly.express as px
@@ -450,6 +451,8 @@ if page == "Overview":
                 st.markdown("_No top-3 rankings in the highlighted categories._")
 
             st.caption(f"Cluster: {row['Cluster_Label']}")
+
+## Map page
 
 
 
