@@ -408,8 +408,8 @@ for _, row in ranking.iterrows():
     if st.button(f"View {muni} details", key=f"btn_{muni}"):
         st.session_state.expanded_muni = None if st.session_state.expanded_muni == muni else muni
     if st.session_state.expanded_muni == muni:
-    st.markdown(f"### {muni} — Need Index")
-    st.metric("Live Need Index",f"{row['Live Need Index']:.4f}")
+        st.markdown(f"### {muni} — Need Index")
+        st.metric("Live Need Index",f"{row['Live Need Index']:.4f}")
         profile_row = profiles[profiles["Municipality"] == muni]
         if not profile_row.empty:
             profile_row = profile_row.iloc[0]
