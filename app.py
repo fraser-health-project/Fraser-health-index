@@ -466,7 +466,7 @@ if page == "View By Map":
         hover_name="Municipality",
         hover_data={"Cluster_Label": True,"Rank": True,"Need Index": False,"Need_Index_Size": False,"lat": False,"lon": False},
         labels={"Cluster_Label" : "Grouping", "Rank" : "Rank"},
-        color_continous_scale="OrRd"
+        color_continous_scale="OrRd",
         map_style="open-street-map",
         zoom=8, height=600)
     st.plotly_chart(fig_map, use_container_width=True)
