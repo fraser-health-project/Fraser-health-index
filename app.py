@@ -458,7 +458,7 @@ st.markdown( "**Notable Stats**")
 highlights = get_top_rankings(muni,stats_source,highlight_columns)
 if highlights:
     for h in highlights:
-    st.markdown(f"- {h}")
+        st.markdown(f"- {h}")
 else:
     st.markdown("Does not have notable statistics within these categories")
 st.caption(f"Cluster: {row['Cluster_Label']}")
