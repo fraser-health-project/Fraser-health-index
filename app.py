@@ -309,69 +309,54 @@ if page == "Overview":
     if "expanded_muni" not in st.session_state:
         st.session_state.expanded_muni = None
     main_col, control_col = st.columns([4, 1],gap="large")
+    with control_col:
+        dem = st.slider( "Demand", 0, 100, 25, key="pillar_demand")
+        cap = st.slider("Capacity",0, 100, 25,key="pillar_capacity")
+        vul = st.slider("Vulnerable Populations",0, 100, 25,key="pillar_vulnerable")
+        unmet = st.slider("Unmet Need",0, 100, 25,key="pillar_unmet")
+        pillar_total = dem + cap + vul + unmet
 
-    dem = st.slider( "Demand", 0, 100, 25, key="pillar_demand")
-    cap = st.slider(
-    "Capacity",
-    0, 100, 25,
-    key="pillar_capacity")
+        if pillar_total == 0:
+            pillar_weights_normalized = {
+            "Demand": 0.25,
+            "Capacity": 0.25,
+            "Vulnerable Populations": 0.25,
+            "Unmet Need and Outcomes": 0.25}
 
-    vul = st.slider(
-    "Vulnerable Populations",
-    0, 100, 25,
-    key="pillar_vulnerable")
-
-    unmet = st.slider(
-    "Unmet Need",
-    0, 100, 25,
-    key="pillar_unmet")
-
-    pillar_total = dem + cap + vul + unmet
-
-    if pillar_total == 0:
-
-        pillar_weights_normalized = {
-        "Demand": 0.25,
-        "Capacity": 0.25,
-        "Vulnerable Populations": 0.25,
-        "Unmet Need and Outcomes": 0.25
-    }
-
-    else:
-
-        pillar_weights_normalized = {
-        "Demand": dem / pillar_total,
-        "Capacity": cap / pillar_total,
-        "Vulnerable Populations": vul / pillar_total,
-        "Unmet Need and Outcomes": unmet / pillar_total
-    }
-DEFAULT_VARIABLE_WEIGHTS = { "Demand": { "ED_visit_rate": 20,"acute_hospital_rate": 25,"ACSC_avg": 5,"procedure_demand_rate": 20,"incompletion_percent": 30},
-        "Capacity": {"Acute bed shortage": 12.5, "Resource Use Intensity": 12.5 , "Facilities": 10, "Wait before initial assesment (ED)": 12.5, 
-                     "90th percentile ED wait time": 15, "Days in alternate levels of care": 12.5,"Procedure and surgical wait": 15,"Patients admitted through ED": 10},
-        "Vulnerable Populations": { "Seniors (65+)": 17, "Over 85": 5, "Under 5": 6, "Frailty": 10, "Low income (By LICO)": 17, "Visible Minority": 1,
-        "Population": 25,"Unemployed": 12.5,"Population growth": 12.5,"High hospital bed users": 10},
-        "Unmet Need and Outcomes": {"Deaths following major surgery": 15,"All patient readmissions": 15,"Specialized readmission": 10,"In Hospital Sepsis": 12.5,
-        "LTC fall rate": 12.5,"Pressure Ulcers": 10,"Depressive Moods": 12.5,"Antipsychotic use (Potentially Innapropriate)": 12.5}}
-
-with st.popover("Advanced Settings"):
-    st.markdown("Adjust the weight of each individual variable within its pillar, the current weights were determined based on contrast and (subjective) importance")
-    variable_weights = {}
-    for pillar_name, cols in pillar_columns.items():
-        st.markdown(f"**{pillar_name}**")
-        even_split = round(100 / len(cols))
-        pillar_var_weights = {}
-        for col in cols:
-            default_value = DEFAULT_VARIABLE_WEIGHTS[pillar_name][col]
-            pillar_var_weights[col] = st.slider(col, 0.0, 100.0, float(default_value), step=0.5, key=f"adv_{col}")
-        var_total = sum(pillar_var_weights.values())
-        if var_total == 0:
-            variable_weights[pillar_name] = {
-                col: 1 / len(cols)
-                for col in cols}
         else:
-            variable_weights[pillar_name] = {
-                col: pillar_var_weights[col] / var_total
-                for col in cols}
+
+            pillar_weights_normalized = {
+            "Demand": dem / pillar_total,
+            "Capacity": cap / pillar_total,
+            "Vulnerable Populations": vul / pillar_total,
+            "Unmet Need and Outcomes": unmet / pillar_total}
+    DEFAULT_VARIABLE_WEIGHTS = { "Demand": { "ED_visit_rate": 20,"acute_hospital_rate": 25,"ACSC_avg": 5,"procedure_demand_rate": 20,"incompletion_percent": 30},
+            "Capacity": {"Acute bed shortage": 12.5, "Resource Use Intensity": 12.5 , "Facilities": 10, "Wait before initial assesment (ED)": 12.5, 
+                         "90th percentile ED wait time": 15, "Days in alternate levels of care": 12.5,"Procedure and surgical wait": 15,"Patients admitted through ED": 10},
+            "Vulnerable Populations": { "Seniors (65+)": 17, "Over 85": 5, "Under 5": 6, "Frailty": 10, "Low income (By LICO)": 17, "Visible Minority": 1,
+            "Population": 25,"Unemployed": 12.5,"Population growth": 12.5,"High hospital bed users": 10},
+            "Unmet Need and Outcomes": {"Deaths following major surgery": 15,"All patient readmissions": 15,"Specialized readmission": 10,"In Hospital Sepsis": 12.5,
+            "LTC fall rate": 12.5,"Pressure Ulcers": 10,"Depressive Moods": 12.5,"Antipsychotic use (Potentially Innapropriate)": 12.5}}
+
+    with st.popover("Advanced Settings"):
+        st.markdown("Adjust the weight of each individual variable within its pillar, the current weights were determined based on contrast and (subjective) importance")
+        variable_weights = {}
+        for pillar_name, cols in pillar_columns.items():
+            st.markdown(f"**{pillar_name}**")
+            even_split = round(100 / len(cols))
+            pillar_var_weights = {}
+            for col in cols:
+                default_value = DEFAULT_VARIABLE_WEIGHTS[pillar_name][col]
+                pillar_var_weights[col] = st.slider(col, 0.0, 100.0, float(default_value), step=0.5, key=f"adv_{col}")
+            var_total = sum(pillar_var_weights.values())
+            if var_total == 0:
+                variable_weights[pillar_name] = {
+                    col: 1 / len(cols)
+                    for col in cols}
+            else:
+                variable_weights[pillar_name] = {
+                    col: pillar_var_weights[col] / var_total
+                    for col in cols}
 with main_col:
     live_pillars = pd.DataFrame({"Municipality": components["Municipality"]})
     pillar_scores = {}
