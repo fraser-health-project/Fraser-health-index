@@ -304,52 +304,70 @@ def zscore(series):
     
 ## OVerview Page
 if page == "Overview":
-    st.title("Fraser Health Needs Index")
-    st.markdown("An interactive tool ranking and grouping hospital systems' need across the Fraser Health Region.")
-    if "expanded_muni" not in st.session_state:
-        st.session_state.expanded_muni = None
-    main_col, control_col = st.columns([2, 1],gap="large")
-    with control_col:
-        dem = st.slider( "Demand", 0, 100, 25, key="pillar_demand")
-        cap = st.slider("Capacity",0, 100, 25,key="pillar_capacity")
-        vul = st.slider("Vulnerable Populations",0, 100, 25,key="pillar_vulnerable")
-        unmet = st.slider("Unmet Need",0, 100, 25,key="pillar_unmet")
-        pillar_total = dem + cap + vul + unmet
+    with st.sidebar:
+        st.markdown("---")
+        st.markdown("#### Pillar Weights")
+        dem = st.slider("Demand", 0, 100, 25, key="pillar_demand")
+        cap = st.slider("Capacity", 0, 100, 25, key="pillar_capacity")
+        vul = st.slider("Vulnerable Populations", 0, 100, 25, key="pillar_vulnerable")
+        unmet = st.slider("Unmet Need", 0, 100, 25, key="pillar_unmet")
 
+        pillar_total = dem + cap + vul + unmet
         if pillar_total == 0:
             pillar_weights_normalized = {
-            "Demand": 0.25,
-            "Capacity": 0.25,
-            "Vulnerable Populations": 0.25,
-            "Unmet Need and Outcomes": 0.25}
-
+                "Demand": 0.25, "Capacity": 0.25,
+                "Vulnerable Populations": 0.25, "Unmet Need and Outcomes": 0.25
+            }
         else:
-
             pillar_weights_normalized = {
-            "Demand": dem / pillar_total,
-            "Capacity": cap / pillar_total,
-            "Vulnerable Populations": vul / pillar_total,
-            "Unmet Need and Outcomes": unmet / pillar_total}
-    DEFAULT_VARIABLE_WEIGHTS = { "Demand": { "ED_visit_rate": 20,"acute_hospital_rate": 25,"ACSC_avg": 5,"procedure_demand_rate": 20,"incompletion_percent": 30},"Capacity": {"Acute bed shortage": 12.5, "Resource Use Intensity": 12.5 , "Facilities": 10, "Wait before initial assesment (ED)": 12.5, "90th percentile ED wait time": 15, "Days in alternate levels of care": 12.5,"Procedure and surgical wait": 15,"Patients admitted through ED": 10},"Vulnerable Populations": { "Seniors (65+)": 17, "Over 85": 5, "Under 5": 6, "Frailty": 10, "Low income (By LICO)": 17, "Visible Minority": 1,"Population": 25,"Unemployed": 12.5,"Population growth": 12.5,"High hospital bed users": 10},"Unmet Need and Outcomes": {"Deaths following major surgery": 15,"All patient readmissions": 15,"Specialized readmission": 10,"In Hospital Sepsis": 12.5,"LTC fall rate": 12.5,"Pressure Ulcers": 10,"Depressive Moods": 12.5,"Antipsychotic use (Potentially Innapropriate)": 12.5}}
-    with st.popover("Advanced Settings"):
-        st.markdown("Adjust the weight of each individual variable within its pillar, the current weights were determined based on contrast and (subjective) importance")
-        variable_weights = {}
-        for pillar_name, cols in pillar_columns.items():
-            st.markdown(f"**{pillar_name}**")
-            even_split = round(100 / len(cols))
-            pillar_var_weights = {}
-            for i, col in enumerate(cols):
-                default_value = DEFAULT_VARIABLE_WEIGHTS.get(pillar_name, {}).get(col, round(100 / len(cols), 1))
-                widget_key = f"adv_{pillar_name}_{i}"   # ← unique per pillar+position, avoids key collisions
-                pillar_var_weights[col] = st.slider(col, 0.0, 100.0, float(default_value), step=0.5, key=widget_key)
-        var_total = sum(pillar_var_weights.values())
-        if var_total == 0:
-            variable_weights[pillar_name] = {col: 1 / len(cols) for col in cols}
-        else:
-            variable_weights[pillar_name] = {
-                col: pillar_var_weights.get(col, 0) / var_total
-                for col in cols}
-with main_col:
+                "Demand": dem / pillar_total,
+                "Capacity": cap / pillar_total,
+                "Vulnerable Populations": vul / pillar_total,
+                "Unmet Need and Outcomes": unmet / pillar_total
+            }
+
+        DEFAULT_VARIABLE_WEIGHTS = {
+            "Demand": {"ED_visit_rate": 20, "acute_hospital_rate": 25, "ACSC_avg": 5,
+                       "procedure_demand_rate": 20, "incompletion_percent": 30},
+            "Capacity": {"Acute bed shortage": 12.5, "Resource Use Intensity": 12.5, "Facilities": 10,
+                         "Wait before initial assesment (ED)": 12.5, "90th percentile ED wait time": 15,
+                         "Days in alternate levels of care": 12.5, "Procedure and surgical wait": 15,
+                         "Patients admitted through ED": 10},
+            "Vulnerable Populations": {"Seniors (65+)": 17, "Over 85": 5, "Under 5": 6, "Frailty": 10,
+                                        "Low income (By LICO)": 17, "Visible Minority": 1, "Population": 25,
+                                        "Unemployed": 12.5, "Population growth": 12.5, "High hospital bed users": 10},
+            "Unmet Need and Outcomes": {"Deaths following major surgery": 15, "All patient readmissions": 15,
+                                         "Specialized readmission": 10, "In Hospital Sepsis": 12.5,
+                                         "LTC fall rate": 12.5, "Pressure Ulcers": 10, "Depressive Moods": 12.5,
+                                         "Antipsychotic use (Potentially Innapropriate)": 12.5}
+        }
+
+        with st.popover("Advanced Settings"):
+            st.markdown("Adjust the weight of each individual variable within its pillar.")
+            variable_weights = {}
+            for pillar_name, cols in pillar_columns.items():
+                st.markdown(f"**{pillar_name}**")
+                pillar_var_weights = {}
+                for i, col in enumerate(cols):
+                    default_value = DEFAULT_VARIABLE_WEIGHTS.get(pillar_name, {}).get(col, round(100 / len(cols), 1))
+                    widget_key = f"adv_{pillar_name}_{i}"
+                    pillar_var_weights[col] = st.slider(col, 0.0, 100.0, float(default_value), step=0.5, key=widget_key)
+
+                var_total = sum(pillar_var_weights.values())
+                if var_total == 0:
+                    variable_weights[pillar_name] = {c: 1 / len(cols) for c in cols}
+                else:
+                    variable_weights[pillar_name] = {
+                        c: pillar_var_weights.get(c, 0) / var_total
+                        for c in cols
+                    }
+
+    st.title("Fraser Health Needs Index")
+    st.markdown("An interactive tool ranking and grouping hospital systems' need across the Fraser Health Region.")
+
+    if "expanded_muni" not in st.session_state:
+        st.session_state.expanded_muni = None
+
     live_pillars = pd.DataFrame({"Municipality": components["Municipality"]})
     pillar_scores = {}
     for pillar_name, cols in pillar_columns.items():
@@ -362,76 +380,76 @@ with main_col:
             weighted_components.append(z * weight)
         if weighted_components:
             pillar_scores[pillar_name] = sum(weighted_components)
-        else:
-            pillar_scores[pillar_name] = pd.Series(0,index=components.index)
-    live_pillars["Live Need Index"] = (
-        pillar_scores["Demand"]
-        * pillar_weights_normalized["Demand"]
-        + pillar_scores["Capacity"]
-        * pillar_weights_normalized["Capacity"]
-        + pillar_scores["Vulnerable Populations"]
-        * pillar_weights_normalized["Vulnerable Populations"]
-        + pillar_scores["Unmet Need and Outcomes"]
-        * pillar_weights_normalized["Unmet Need and Outcomes"])
-    ranking = live_pillars[["Municipality", "Live Need Index"]].merge(final_df[["Municipality", "Cluster_Label"]], on="Municipality").sort_values("Live Need Index", ascending=False).reset_index(drop=True)
-    ranking["Rank"] = range(1, len(ranking) + 1)
-    st.subheader("Municipality Ranking")
-    st.markdown(
-            """
-            <style>
-            .ranking-card {
-                background-color: #1E222B;
-                border: 1px solid #3A3F4B;
-                border-left: 8px solid #E74C3C;
-                border-radius: 16px;
-                padding: 22px 28px;
-                margin-bottom: 4px;
-                max-width: 480px;
-            }
-            .rank-number { font-size: 40px; font-weight: 800; margin-bottom: 8px; }
-            .municipality-name { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
-            </style>
-            """,
-            unsafe_allow_html=True
-        )
 
-stats_source = components.merge(final_df[["Municipality"]], on="Municipality")
-for _, row in ranking.iterrows():
-    muni = row["Municipality"]
-    card_html = f"""
+    for pillar_name, score in pillar_scores.items():
+        live_pillars[pillar_name + " Z (live)"] = score
+
+    live_pillars["Live Need Index"] = sum(
+        live_pillars[p + " Z (live)"] * w for p, w in pillar_weights_normalized.items()
+        if (p + " Z (live)") in live_pillars.columns
+    )
+
+    ranking = live_pillars[["Municipality", "Live Need Index"]].merge(
+        final_df[["Municipality", "Cluster_Label"]], on="Municipality"
+    ).sort_values("Live Need Index", ascending=False).reset_index(drop=True)
+    ranking["Rank"] = range(1, len(ranking) + 1)
+
+    st.subheader("Municipality Ranking")
+
+    st.markdown(
+        """
+        <style>
+        .ranking-card {
+            background-color: #1E222B;
+            border: 1px solid #3A3F4B;
+            border-left: 8px solid #E74C3C;
+            border-radius: 16px;
+            padding: 22px 28px;
+            margin-bottom: 4px;
+            max-width: 480px;
+        }
+        .rank-number { font-size: 40px; font-weight: 800; margin-bottom: 8px; }
+        .municipality-name { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+        .need-score { font-size: 17px; }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+    stats_source = components.merge(final_df[["Municipality"]], on="Municipality")
+
+    for _, row in ranking.iterrows():
+        muni = row["Municipality"]
+        card_html = f"""
 <div class="ranking-card">
     <div class="rank-number">#{int(row['Rank'])}</div>
     <div class="municipality-name">{muni}</div>
-    </div>
 </div>
 """
-    st.markdown(card_html, unsafe_allow_html=True)
+        st.markdown(card_html, unsafe_allow_html=True)
 
-    if st.button(f"View {muni} details", key=f"btn_{muni}"):
-        st.session_state.expanded_muni = None if st.session_state.expanded_muni == muni else muni
-    if st.session_state.expanded_muni == muni:
-        st.markdown(f"### {muni} — Need Index")
-        st.metric("Live Need Index",f"{row['Live Need Index']:.4f}")
-        profile_row = profiles[profiles["Municipality"] == muni]
-        if not profile_row.empty:
-            profile_row = profile_row.iloc[0]
-            st.markdown(profile_row["Blurb"])
-        else:
-            st.markdown("_Profile not yet written for this municipality._")
+        if st.button(f"View {muni} details", key=f"btn_{muni}"):
+            st.session_state.expanded_muni = None if st.session_state.expanded_muni == muni else muni
 
-        st.markdown("**Notable Stats**")
-        highlights = get_top_rankings(muni, stats_source, highlight_columns)
-        if highlights:
-            for h in highlights:
-                st.markdown(f"- {h}")
-        else:
-            st.markdown("_No top-3 rankings in the highlighted categories._")
+        if st.session_state.expanded_muni == muni:
+            st.markdown(f"**Need Index:** {row['Live Need Index']:.4f}")
 
-        st.caption(f"Cluster: {row['Cluster_Label']}")
+            profile_row = profiles[profiles["Municipality"] == muni]
+            if not profile_row.empty:
+                profile_row = profile_row.iloc[0]
+                st.markdown(profile_row["Blurb"])
+            else:
+                st.markdown("_Profile not yet written for this municipality._")
 
+            st.markdown("**Notable Stats**")
+            highlights = get_top_rankings(muni, stats_source, highlight_columns)
+            if highlights:
+                for h in highlights:
+                    st.markdown(f"- {h}")
+            else:
+                st.markdown("_No top-3 rankings in the highlighted categories._")
 
-
-
+            st.caption(f"Cluster: {row['Cluster_Label']}")
 
 
 
