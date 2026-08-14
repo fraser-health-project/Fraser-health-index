@@ -337,25 +337,25 @@ if page == "Overview":
             "Population": 25,"Unemployed": 12.5,"Population growth": 12.5,"High hospital bed users": 10},
             "Unmet Need and Outcomes": {"Deaths following major surgery": 15,"All patient readmissions": 15,"Specialized readmission": 10,"In Hospital Sepsis": 12.5,
             "LTC fall rate": 12.5,"Pressure Ulcers": 10,"Depressive Moods": 12.5,"Antipsychotic use (Potentially Innapropriate)": 12.5}}
-        with st.popover("Advanced Settings"):
-            st.markdown("Adjust the weight of each individual variable within its pillar, the current weights were determined based on contrast and (subjective) importance")
-            variable_weights = {}
-            for pillar_name, cols in pillar_columns.items():
-                st.markdown(f"**{pillar_name}**")
-                even_split = round(100 / len(cols))
-                pillar_var_weights = {}
-                for col in cols:
-                    default_value = DEFAULT_VARIABLE_WEIGHTS[pillar_name][col]
-                    pillar_var_weights[col] = st.slider(col, 0.0, 100.0, float(default_value), step=0.5, key=f"adv_{col}")
-                var_total = sum(pillar_var_weights.values())
-                if var_total == 0:
-                    variable_weights[pillar_name] = {
-                        col: 1 / len(cols)
+            with st.popover("Advanced Settings"):
+                st.markdown("Adjust the weight of each individual variable within its pillar, the current weights were determined based on contrast and (subjective) importance")
+                variable_weights = {}
+                for pillar_name, cols in pillar_columns.items():
+                    st.markdown(f"**{pillar_name}**")
+                    even_split = round(100 / len(cols))
+                    pillar_var_weights = {}
+                    for col in cols:
+                        default_value = DEFAULT_VARIABLE_WEIGHTS[pillar_name][col]
+                        pillar_var_weights[col] = st.slider(col, 0.0, 100.0, float(default_value), step=0.5, key=f"adv_{col}")
+                    var_total = sum(pillar_var_weights.values())
+                    if var_total == 0:
+                        variable_weights[pillar_name] = {
+                            col: 1 / len(cols)
+                            for col in cols}
+                    else:
+                        variable_weights[pillar_name] = {
+                        col: pillar_var_weights[col] / var_total
                         for col in cols}
-            else:
-                variable_weights[pillar_name] = {
-                    col: pillar_var_weights[col] / var_total
-                    for col in cols}
 with main_col:
     live_pillars = pd.DataFrame({"Municipality": components["Municipality"]})
     pillar_scores = {}
