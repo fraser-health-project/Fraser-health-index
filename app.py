@@ -364,7 +364,7 @@ with st.popover("Advanced Settings"):
             variable_weights[pillar_name] = {
                 col: pillar_var_weights[col] / var_total
                 for col in cols}
-   with main_col:
+with main_col:
     live_pillars = pd.DataFrame({"Municipality": components["Municipality"]})
     pillar_scores = {}
     for pillar_name, cols in pillar_columns.items():
