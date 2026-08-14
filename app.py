@@ -455,13 +455,13 @@ if page == "Overview":
 ## Map page
 final_df["Need_Index_Size"] = final_df["Need Index"] - final_df["Need Index"].min() + 1
 
-fig_map = px.scatter_mapbox(
+fig_map = px.scatter_map(
     final_df, lat="lat", lon="lon",
     color="Need Index",           # can be negative — color scales handle this fine
     size="Need_Index_Size",       # always positive — safe for marker size
     hover_name="Municipality",
     hover_data=["Cluster_Label", "Rank"],
-    mapbox_style="carto-positron",
+    map_style="carto-positron",
     zoom=8, height=600)
 
 
