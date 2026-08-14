@@ -410,7 +410,7 @@ with main_col:
             unsafe_allow_html=True
         )
 
-        stats_source = components.merge(final_df[["Municipality"]], on="Municipality")
+stats_source = components.merge(final_df[["Municipality"]], on="Municipality")
 for _, row in ranking.iterrows():
     muni = row["Municipality"]
     card_html = f"""
