@@ -5,13 +5,13 @@ import plotly.express as px
 import textwrap
 
 st.set_page_config(page_title="Fraser Health Needs Index", layout="wide")
-final_df = pd.read_csv("data/final_df.csv")
+final_df = pd.read_csv("data/final_df(part3).csv")
+meta = pd.read_csv("KPI_metadata.csv")
 
 st.sidebar.title("In this index...")
 page = st.sidebar.radio(
     "Navigate",
-    ["Overview", "View By Map", "View By Group", "Data and Limitations", "Methodology"]
-)
+    ["Overview", "Data and Limitations", "Methodology"])
 ##Setup
 components = pd.read_csv("data/pillar_components.csv")
 numeric_cols = components.columns.drop("Municipality")
@@ -261,39 +261,18 @@ profiles = pd.DataFrame({
             "outpatient support and ambulatory systems will help alleviate "
             "patient needs as care becomes complex." ) ]})
 
+# Temporary, drop later
 pillar_columns = {
-    "Demand": ['ED_visit_rate', 'acute_hospital_rate', 'ACSC_avg',
-       'procedure_demand_rate', 'incompletion_percent'],
-    "Capacity": [ 'Acute bed shortage', 'Resource Use Intensity','Facilities', 'Wait before initial assesment (ED)',
+    "Patient Demand": ['ED visits per 1,000', 'Acute Hospital Stays', 'ACSC (Avoidable) Hospitalizations',
+       'Demand for specialized procedures'],
+    "Hospital Strain": [ 'Acute bed shortage', 'Resource Use Intensity','Facilities', 'Wait before initial assesment (ED)',
        '90th percentile ED wait time', 'Days in alternate levels of care',
-       'Procedure and surgical wait', 'Patients admitted through ED'],
-    "Vulnerable Populations": ['Seniors (65+)', 'Over 85', 'Under 5', 'Frailty',
-       'Low income (By LICO)', 'Visible Minority', 'Population', 'Unemployed',
-       'Population growth', 'High hospital bed users'],
+       'Procedure and surgical wait', 'Patients admitted through ED','Procedure Incompletion Rate'],
+    "Vulnerable Populations": ['Seniors (65+)', 'Over 85', 'Under 5', 'Frailty','Population', 'Unemployed','Population growth', 'High hospital bed users'],
     "Unmet Need and Outcomes": ['Deaths following major surgery',
        'All patient readmissions', 'Specialized readmission',
        'In Hospital Sepsis', 'LTC fall rate', 'Pressure Ulcers',
        'Depressive Moods', 'Antipsychotic use (Potentially Innapropriate)']}
-highlight_columns = [ 'ED_visit_rate', 'incompletion_percent', 'Wait before initial assesment (ED)', 'Acute bed shortage', 'Procedure and surgical wait',
-                     'Seniors (65+)', 'Population', 'Population growth', 'All patient readmissions', 'Specialized readmission']
-def get_top_rankings(municipality,df,columns,top_n_threshold=3):
-    highlights = []
-    for col in columns:
-        ranked = df[["Municipality", col]].copy()
-        ranked["_rank"] = ranked[col].rank(
-            ascending=False,
-            method="min")
-        muni_rank = ranked.loc[
-            ranked["Municipality"] == municipality,
-            "_rank"
-        ].values
-        if len(muni_rank) == 0 or pd.isna(muni_rank[0]):
-            continue
-        muni_rank = int(muni_rank[0])
-        if muni_rank <= top_n_threshold:
-            suffix = { 1: "st", 2: "nd", 3: "rd"}.get(muni_rank, "th")
-            highlights.append(f"{muni_rank}{suffix} highest in {col}")
-    return highlights
 
 def zscore(series):
     series = pd.to_numeric(series, errors="coerce")
@@ -308,40 +287,38 @@ if page == "Overview":
     with st.sidebar:
         st.markdown("---")
         st.markdown("#### Pillar Weights")
-        dem = st.slider("Demand", 0, 100, 25, key="pillar_demand")
-        cap = st.slider("Capacity", 0, 100, 25, key="pillar_capacity")
+        dem = st.slider("Patient Demand", 0, 100, 25, key="pillar_demand")
+        cap = st.slider("Hospital Strain", 0, 100, 25, key="pillar_capacity")
         vul = st.slider("Vulnerable Populations", 0, 100, 25, key="pillar_vulnerable")
-        unmet = st.slider("Unmet Need", 0, 100, 25, key="pillar_unmet")
+        unmet = st.slider("Outcomes", 0, 100, 25, key="pillar_unmet")
 
         pillar_total = dem + cap + vul + unmet
         if pillar_total == 0:
             pillar_weights_normalized = {
-                "Demand": 0.25, "Capacity": 0.25,
-                "Vulnerable Populations": 0.25, "Unmet Need and Outcomes": 0.25
+                "Patient Demand": 0.25, "Hospital Strain": 0.25,
+                "Vulnerable Populations": 0.25, "Outcomes": 0.25
             }
         else:
             pillar_weights_normalized = {
-                "Demand": dem / pillar_total,
-                "Capacity": cap / pillar_total,
+                "Patient Demand": dem / pillar_total,
+                "Hospital Strain": cap / pillar_total,
                 "Vulnerable Populations": vul / pillar_total,
-                "Unmet Need and Outcomes": unmet / pillar_total
+                "Outcomes": unmet / pillar_total
             }
-
+## EDIT THIS
         DEFAULT_VARIABLE_WEIGHTS = {
-            "Demand": {"ED_visit_rate": 20, "acute_hospital_rate": 25, "ACSC_avg": 5,
-                       "procedure_demand_rate": 20, "incompletion_percent": 30},
-            "Capacity": {"Acute bed shortage": 12.5, "Resource Use Intensity": 12.5, "Facilities": 10,
-                         "Wait before initial assesment (ED)": 12.5, "90th percentile ED wait time": 15,
-                         "Days in alternate levels of care": 12.5, "Procedure and surgical wait": 15,
-                         "Patients admitted through ED": 10},
-            "Vulnerable Populations": {"Seniors (65+)": 17, "Over 85": 5, "Under 5": 6, "Frailty": 10,
-                                        "Low income (By LICO)": 17, "Visible Minority": 1, "Population": 25,
+            "Patient Demand": {"ED Visits Per 1,000": 35, "Acute Hospital Stays": 25, "ACSC (Avoidable) Hospitalizations": 5,
+                       "Procedure Demand Rate": 35},
+            "Hospital Strain": {"Acute bed shortage": 12.5, "Resource Use Intensity": 10, "Facilities": 10,
+                         "Wait before initial assesment (ED)": 10, "90th percentile ED wait time": 10,
+                         "Days in alternate levels of care": 10, "Procedure and surgical wait": 15,
+                         "Patients admitted through ED": 10, "Procedure Incompletion Rate": 12.5},
+            "Vulnerable Populations": {"Seniors (65+)": 15, "Over 85": 7.5, "Under 5": 15, "Frailty": 12.5, "Population": 15,
                                         "Unemployed": 12.5, "Population growth": 12.5, "High hospital bed users": 10},
-            "Unmet Need and Outcomes": {"Deaths following major surgery": 15, "All patient readmissions": 15,
+            "Outcomes": {"Deaths following major surgery": 15, "All patient readmissions": 15,
                                          "Specialized readmission": 10, "In Hospital Sepsis": 12.5,
                                          "LTC fall rate": 12.5, "Pressure Ulcers": 10, "Depressive Moods": 12.5,
-                                         "Antipsychotic use (Potentially Innapropriate)": 12.5}
-        }
+                                         "Antipsychotic use (Potentially Innapropriate)": 12.5}}
 
         with st.popover("Advanced Settings"):
             st.markdown("Adjust the weight of each individual variable within its pillar.")
@@ -360,14 +337,10 @@ if page == "Overview":
                 else:
                     variable_weights[pillar_name] = {
                         c: pillar_var_weights.get(c, 0) / var_total
-                        for c in cols
-                    }
+                        for c in cols}
 
     st.title("Fraser Health Needs Index")
     st.markdown("An interactive tool ranking and grouping hospital systems' need across the Fraser Health Region.")
-
-    if "expanded_muni" not in st.session_state:
-        st.session_state.expanded_muni = None
 
     live_pillars = pd.DataFrame({"Municipality": components["Municipality"]})
     pillar_scores = {}
@@ -387,88 +360,10 @@ if page == "Overview":
 
     live_pillars["Live Need Index"] = sum(
         live_pillars[p + " Z (live)"] * w for p, w in pillar_weights_normalized.items()
-        if (p + " Z (live)") in live_pillars.columns
-    )
+        if (p + " Z (live)") in live_pillars.columns)
 
-    ranking = live_pillars[["Municipality", "Live Need Index"]].merge(
-        final_df[["Municipality", "Cluster_Label"]], on="Municipality"
-    ).sort_values("Live Need Index", ascending=False).reset_index(drop=True)
-    ranking["Rank"] = range(1, len(ranking) + 1)
+ 
 
-    st.subheader("Municipality Ranking")
 
-    st.markdown(
-        """
-        <style>
-        .ranking-card {
-            background-color: #1E222B;
-            border: 1px solid #3A3F4B;
-            border-left: 8px solid #E74C3C;
-            border-radius: 16px;
-            padding: 22px 28px;
-            margin-bottom: 4px;
-            max-width: 480px;
-        }
-        .rank-number { font-size: 40px; font-weight: 800; margin-bottom: 8px; }
-        .municipality-name { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
-        .need-score { font-size: 17px; }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
-
-    stats_source = components.merge(final_df[["Municipality"]], on="Municipality")
-
-    for _, row in ranking.iterrows():
-        muni = row["Municipality"]
-        card_html = f"""
-<div class="ranking-card">
-    <div class="rank-number">#{int(row['Rank'])}</div>
-    <div class="municipality-name">{muni}</div>
-</div>
-"""
-        st.markdown(card_html, unsafe_allow_html=True)
-
-        if st.button(f"View {muni} details", key=f"btn_{muni}"):
-            st.session_state.expanded_muni = None if st.session_state.expanded_muni == muni else muni
-
-        if st.session_state.expanded_muni == muni:
-            st.markdown(f"**Need Index:** {row['Live Need Index']:.4f}")
-
-            profile_row = profiles[profiles["Municipality"] == muni]
-            if not profile_row.empty:
-                profile_row = profile_row.iloc[0]
-                st.markdown(profile_row["Blurb"])
-            else:
-                st.markdown("_Profile not yet written for this municipality._")
-
-            st.markdown("**Notable Stats**")
-            highlights = get_top_rankings(muni, stats_source, highlight_columns)
-            if highlights:
-                for h in highlights:
-                    st.markdown(f"- {h}")
-            else:
-                st.markdown("_No top-3 rankings in the highlighted categories._")
-
-            st.caption(f"Cluster: {row['Cluster_Label']}")
-final_df["Need_Index_Size"] = final_df["Need Index"] - final_df["Need Index"].min() + 1
-## Map page
-    #st.dataframe(final_df[["Municipality", "lat", "lon", "Need Index", "Need_Index_Size"]])
-if page == "View By Map":
-    st.subheader("Need Across the Region")
-    final_df["lat"] = pd.to_numeric(final_df["lat"], errors="coerce")
-    final_df["lon"] = pd.to_numeric(final_df["lon"], errors="coerce")
-    final_df["Need_Index_Size"] = final_df["Need Index"] - final_df["Need Index"].min() + 1
-    fig_map = px.scatter_map(
-        final_df, lat="lat", lon="lon",
-        color="Need Index",
-        size="Need_Index_Size",
-        hover_name="Municipality",
-        hover_data={"Cluster_Label": True,"Rank": True,"Need Index": False,"Need_Index_Size": False,"lat": False,"lon": False},
-        labels={"Cluster_Label" : "Grouping", "Rank" : "Rank"},
-        color_continuous_scale="OrRd",
-        map_style="open-street-map",
-        zoom=8, height=600)
-    st.plotly_chart(fig_map, use_container_width=True)
 
 
