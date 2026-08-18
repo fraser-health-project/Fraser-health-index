@@ -452,7 +452,7 @@ if page == "Overview":
             color="Cluster_Label",
             color_discrete_map=cluster_colors,
             title="Municipality Ranking by Need",
-            custom_data=["Cluster_Label","Group_Description"])
+            custom_data=["Municipality", "Cluster_Label", "Group_Description"]
         st.markdown("Tap on a municipality for details")
         fig_bar.update_layout(height = 600, yaxis={"categoryorder": "total ascending"},legend_title_text="Group") 
         fig_bar.update_traces(hovertemplate=
@@ -465,8 +465,8 @@ if page == "Overview":
         "<extra></extra>")
         event = st.plotly_chart(fig_bar, use_container_width=True, on_select="rerun", key="ranking_chart")
         if event and event.get("selection", {}).get("points"):
-            clicked_index = event["selection"]["points"][0]["point_index"]
-            clicked_muni = ranking.iloc[clicked_index]["Municipality"]
+            clicked_point = event["selection"]["points"][0]
+            clicked_muni = clicked_point["customdata"][0]
             st.session_state.selected_muni = clicked_muni
             st.session_state.view = "detail"
             st.rerun()
