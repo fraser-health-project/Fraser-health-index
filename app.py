@@ -403,7 +403,7 @@ if page == "Overview":
             st.session_state.selected_muni = clicked_muni
             st.session_state.view = "detail"
             st.rerun()
-        
+        legend_title_text="Group"
 
 
 
