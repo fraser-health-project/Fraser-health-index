@@ -443,7 +443,6 @@ if page == "Overview":
     group_descriptions)
     ranking["Group_Wrapped"] = ranking["Group_Description"].apply(
     lambda x: "<br>".join(textwrap.wrap(str(x), width=45)))
-    customdata=df[["Municipality","Group","Group_Wrapped"]].values
     if st.session_state.view == "ranking":
         st.title("Fraser Health Needs Index")
         st.markdown("An interactive tool ranking and grouping hospital systems' need across the Fraser Health Region.")
@@ -455,7 +454,7 @@ if page == "Overview":
             color="Cluster_Label",
             color_discrete_map=cluster_colors,
             title="Municipality Ranking by Need",
-            custom_data=["Municipality", "Cluster_Label", "Group_Description"])
+            custom_data=["Municipality", "Cluster_Label", "Group_Wrapped"])
         st.markdown("Tap on a municipality for details")
         fig_bar.update_layout(height = 600, yaxis={"categoryorder": "total ascending"},legend_title_text="Group") 
         fig_bar.update_traces(hovertemplate=(
