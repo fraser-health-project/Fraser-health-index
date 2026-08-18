@@ -367,17 +367,35 @@ if page == "Overview":
         st.session_state.view = "ranking"  # "ranking" or "detail"
     if "selected_muni" not in st.session_state:
         st.session_state.selected_muni = None
-    cluster_descriptions = {
-    "Cluster 1": "WRITE YOUR EXPLANATION HERE",
-    "Cluster 2": "WRITE YOUR EXPLANATION HERE",
-    "Cluster 3": "WRITE YOUR EXPLANATION HERE"}
+    group_descriptions = {
+    "Vulnerable Population, Adequate Capacity":
+        "Census data can tell us that these municipalities have large populations, or certain demographics that are especially in need of care (ex. seniors, children under 5, larger areas of growth)",
+    "High-Pressure System (High Demand + Strained Capacity)": "These municipalities likely serve a large population and often face strains in both acute care and emergency departments",
+    "Baseline, Moderate Need": "These municipalities typically fall in the median or lower average of the index, telling us that they adequately supply their resident's needs, however, this does not mean these municipalities do not need new policies to better allieviate need"
+    }
+    ranking["Group_Description"] = ranking["Cluster_Label"].map(
+    group_descriptions)
     if st.session_state.view == "ranking":
         st.title("Fraser Health Needs Index")
         st.markdown("An interactive tool ranking and grouping hospital systems' need across the Fraser Health Region.")
         cluster_colors = { "Vulnerable Population, Adequate Capacity": "#E94F58","High-Pressure System (High Demand + Strained Capacity)": "#800020","Baseline, Moderate Need": "#F5D2D2"}
-        fig_bar = px.bar(ranking,x="Live Need Index",y="Municipality",orientation="h",color="Cluster_Label",color_discrete_map=cluster_colors,title="Municipality Ranking by Need")
-        fig_bar.update_layout(height = 600, yaxis={"categoryorder": "total ascending"}) 
-        
+        fig_bar = px.bar(
+            ranking,x="Live Need Index",
+            y="Municipality",
+            orientation="h",
+            color="Cluster_Label",
+            color_discrete_map=cluster_colors,
+            title="Municipality Ranking by Need",
+            custom_data=["Cluster_Label","Group_Description"])
+        fig_bar.update_layout(height = 600, yaxis={"categoryorder": "total ascending"},legend_title_text="Group") 
+        fig_bar.update_traces(hovertemplate=
+        "<b>%{y}</b><br>"
+        "Need Index: %{x:.2f}<br>"
+        "<b>Group:</b> %{customdata[0]}<br>"
+        "<br>"
+        "<b>What this group means:</b><br>"
+        "%{customdata[1]}"
+        "<extra></extra>")
         event = st.plotly_chart(fig_bar, use_container_width=True, on_select="rerun", key="ranking_chart")
         if event and event.get("selection", {}).get("points"):
             clicked_index = event["selection"]["points"][0]["point_index"]
