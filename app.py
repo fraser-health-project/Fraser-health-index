@@ -367,10 +367,15 @@ if page == "Overview":
         st.session_state.view = "ranking"  # "ranking" or "detail"
     if "selected_muni" not in st.session_state:
         st.session_state.selected_muni = None
+    cluster_descriptions = {
+    "Cluster 1": "WRITE YOUR EXPLANATION HERE",
+    "Cluster 2": "WRITE YOUR EXPLANATION HERE",
+    "Cluster 3": "WRITE YOUR EXPLANATION HERE"}
     if st.session_state.view == "ranking":
         st.title("Fraser Health Needs Index")
         st.markdown("An interactive tool ranking and grouping hospital systems' need across the Fraser Health Region.")
-        fig_bar = px.bar(ranking,x="Live Need Index",y="Municipality",orientation="h",color="Cluster_Label",title="Municipality Ranking by Need")
+        cluster_colors = { "Vulnerable Population, Adequate Capacity": "#636EFA","High-Pressure System (High Demand + Strained Capacity)": "#EF553B","Baseline, Moderate Need": "#00CC96"}
+        fig_bar = px.bar(ranking,x="Live Need Index",y="Municipality",orientation="h",color="Cluster_Label",color_discrete_map=cluster_colors,title="Municipality Ranking by Need")
         fig_bar.update_layout(height = 600, yaxis={"categoryorder": "total ascending"}) 
         
         event = st.plotly_chart(fig_bar, use_container_width=True, on_select="rerun", key="ranking_chart")
