@@ -13,7 +13,7 @@ page = st.sidebar.radio(
     "Navigate",
     ["Overview", "Data and Limitations", "Methodology"])
 ##Setup
-components = pd.read_csv("data/pillar_components.csv")
+components = pd.read_csv("data/pillar_components(part2).csv")
 numeric_cols = components.columns.drop("Municipality")
 components[numeric_cols] = components[numeric_cols].fillna(0)
 
