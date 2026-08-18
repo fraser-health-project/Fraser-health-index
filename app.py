@@ -284,14 +284,10 @@ def zscore(series):
     
 ## OVerview Page
 if page == "Overview":
-if "view" not in st.session_state:
+    if "view" not in st.session_state:
         st.session_state.view = "ranking"   # "ranking" or "detail"
     if "selected_muni" not in st.session_state:
         st.session_state.selected_muni = None
-
-    # ... sidebar sliders + Advanced Settings + Stage 1/Stage 2 live Need Index math
-    # stays exactly where it already is, just with updated pillar names/KPI groupings ...
-
     if st.session_state.view == "ranking":
         st.title("Fraser Health Needs Index")
         st.markdown("An interactive tool ranking and grouping hospital systems' need across the Fraser Health Region.")
