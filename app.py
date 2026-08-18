@@ -374,7 +374,7 @@ if page == "Overview":
     if st.session_state.view == "ranking":
         st.title("Fraser Health Needs Index")
         st.markdown("An interactive tool ranking and grouping hospital systems' need across the Fraser Health Region.")
-        cluster_colors = { "Vulnerable Population, Adequate Capacity": "#636EFA","High-Pressure System (High Demand + Strained Capacity)": "#EF553B","Baseline, Moderate Need": "#00CC96"}
+        cluster_colors = { "Vulnerable Population, Adequate Capacity": "#E94F58","High-Pressure System (High Demand + Strained Capacity)": "#800020","Baseline, Moderate Need": "#F5D2D2"}
         fig_bar = px.bar(ranking,x="Live Need Index",y="Municipality",orientation="h",color="Cluster_Label",color_discrete_map=cluster_colors,title="Municipality Ranking by Need")
         fig_bar.update_layout(height = 600, yaxis={"categoryorder": "total ascending"}) 
         
