@@ -441,6 +441,9 @@ if page == "Overview":
     }
     ranking["Group_Description"] = ranking["Cluster_Label"].map(
     group_descriptions)
+    ranking["Group_Wrapped"] = ranking["Group_Description"].apply(
+    lambda x: "<br>".join(textwrap.wrap(str(x), width=45)))
+    customdata=df[["Municipality","Group","Group_Wrapped"]].values
     if st.session_state.view == "ranking":
         st.title("Fraser Health Needs Index")
         st.markdown("An interactive tool ranking and grouping hospital systems' need across the Fraser Health Region.")
@@ -455,14 +458,14 @@ if page == "Overview":
             custom_data=["Municipality", "Cluster_Label", "Group_Description"])
         st.markdown("Tap on a municipality for details")
         fig_bar.update_layout(height = 600, yaxis={"categoryorder": "total ascending"},legend_title_text="Group") 
-        fig_bar.update_traces(hovertemplate=
-        "<b>%{y}</b><br>"
-        "Need Index: %{x:.2f}<br>"
-        "<b>Group:</b> %{customdata[1]}<br>"
-        "<br>"
-        "<b>What this group means:</b><br>"
-        "%{customdata[2]}"
-        "<extra></extra>")
+        fig_bar.update_traces(hovertemplate=(
+            "<b>%{y}</b><br>"
+            "Need Index: %{x:.2f}<br>"
+            "<b>Group:</b> %{customdata[1]}<br>"
+            "<br>"
+            "<b>What this group means:</b><br>"
+            "%{customdata[2]}"
+            "<extra></extra>")
         event = st.plotly_chart(fig_bar, use_container_width=True, on_select="rerun", key="ranking_chart")
         if event and event.get("selection", {}).get("points"):
             clicked_point = event["selection"]["points"][0]
