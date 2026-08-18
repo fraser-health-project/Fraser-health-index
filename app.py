@@ -6,7 +6,7 @@ import textwrap
 
 st.set_page_config(page_title="Fraser Health Needs Index", layout="wide")
 final_df = pd.read_csv("data/final_df(part3).csv")
-meta = pd.read_csv("KPI_metadata.csv")
+meta = pd.read_csv("data/KPI_metadata.csv")
 
 st.sidebar.title("In this index...")
 page = st.sidebar.radio(
