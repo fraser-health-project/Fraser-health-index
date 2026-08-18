@@ -284,30 +284,6 @@ def zscore(series):
     
 ## OVerview Page
 if page == "Overview":
-    ranking = ranking.sort_values("Live Need Index", ascending=False)  
-    if "view" not in st.session_state:
-        st.session_state.view = "ranking"  # "ranking" or "detail"
-    if "selected_muni" not in st.session_state:
-        st.session_state.selected_muni = None
-    if st.session_state.view == "ranking":
-        st.title("Fraser Health Needs Index")
-        st.markdown("An interactive tool ranking and grouping hospital systems' need across the Fraser Health Region.")
-        fig_bar = px.bar(
-            ranking, x="Municipality", y="Live Need Index",
-            color="Cluster_Label",
-            color_discrete_sequence=px.colors.sequential.Reds,
-            title="Municipality Ranking by Need"
-        )
-        fig_bar.update_layout(xaxis={'categoryorder': 'total descending'})  # keeps bars dynamically ranked left-to-right
-
-        event = st.plotly_chart(fig_bar, use_container_width=True, on_select="rerun", key="ranking_chart")
-        if event and event.get("selection", {}).get("points"):
-            clicked_index = event["selection"]["points"][0]["point_index"]
-            clicked_muni = ranking.iloc[clicked_index]["Municipality"]
-            st.session_state.selected_muni = clicked_muni
-            st.session_state.view = "detail"
-            st.rerun()
-
     #elif st.session_state.view == "detail":
         #render_detail_page(st.session_state.selected_muni)  # see D2
     with st.sidebar:
@@ -382,12 +358,35 @@ if page == "Overview":
 
     for pillar_name, score in pillar_scores.items():
         live_pillars[pillar_name + " Z (live)"] = score
-
     live_pillars["Live Need Index"] = sum(
         live_pillars[p + " Z (live)"] * w for p, w in pillar_weights_normalized.items()
         if (p + " Z (live)") in live_pillars.columns)
+    ranking = live_pillars[["Municipality", "Live Need Index"]].merge(
+    final_df[["Municipality", "Cluster_Label"]],
+    on="Municipality"
+).sort_values("Live Need Index", ascending=False).reset_index(drop=True)
+    if "view" not in st.session_state:
+        st.session_state.view = "ranking"  # "ranking" or "detail"
+    if "selected_muni" not in st.session_state:
+        st.session_state.selected_muni = None
+    if st.session_state.view == "ranking":
+        st.title("Fraser Health Needs Index")
+        st.markdown("An interactive tool ranking and grouping hospital systems' need across the Fraser Health Region.")
+        fig_bar = px.bar(
+            ranking, x="Municipality", y="Live Need Index",
+            color="Cluster_Label",
+            color_discrete_sequence=px.colors.sequential.Reds,
+            title="Municipality Ranking by Need"
+        )
+        fig_bar.update_layout(xaxis={'categoryorder': 'total descending'})  # keeps bars dynamically ranked left-to-right
 
- 
+        event = st.plotly_chart(fig_bar, use_container_width=True, on_select="rerun", key="ranking_chart")
+        if event and event.get("selection", {}).get("points"):
+            clicked_index = event["selection"]["points"][0]["point_index"]
+            clicked_muni = ranking.iloc[clicked_index]["Municipality"]
+            st.session_state.selected_muni = clicked_muni
+            st.session_state.view = "detail"
+            st.rerun()
 
 
 
