@@ -361,6 +361,7 @@ if page == "Overview":
     live_pillars["Live Need Index"] = sum(
         live_pillars[p + " Z (live)"] * w for p, w in pillar_weights_normalized.items()
         if (p + " Z (live)") in live_pillars.columns)
+        live_pillars["Live Need Index"] = (live_pillars["Live Need Index"]- live_pillars["Live Need Index"].min())
     ranking = live_pillars[["Municipality", "Live Need Index"]].merge(
     final_df[["Municipality", "Cluster_Label"]],
     on="Municipality"
@@ -372,14 +373,9 @@ if page == "Overview":
     if st.session_state.view == "ranking":
         st.title("Fraser Health Needs Index")
         st.markdown("An interactive tool ranking and grouping hospital systems' need across the Fraser Health Region.")
-        fig_bar = px.bar(
-            ranking, x="Municipality", y="Live Need Index",
-            color="Cluster_Label",
-            color_discrete_sequence=px.colors.sequential.Reds,
-            title="Municipality Ranking by Need"
-        )
-        fig_bar.update_layout(xaxis={'categoryorder': 'total descending'})  # keeps bars dynamically ranked left-to-right
-
+        fig_bar = px.bar(ranking,x="Live Need Index",y="Municipality",orientation="h",color="Cluster_Label",title="Municipality Ranking by Need")
+        fig_bar.update_layout(yaxis={"categoryorder": "total ascending"}) 
+        
         event = st.plotly_chart(fig_bar, use_container_width=True, on_select="rerun", key="ranking_chart")
         if event and event.get("selection", {}).get("points"):
             clicked_index = event["selection"]["points"][0]["point_index"]
