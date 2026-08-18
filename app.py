@@ -374,7 +374,7 @@ if page == "Overview":
         st.title("Fraser Health Needs Index")
         st.markdown("An interactive tool ranking and grouping hospital systems' need across the Fraser Health Region.")
         fig_bar = px.bar(ranking,x="Live Need Index",y="Municipality",orientation="h",color="Cluster_Label",title="Municipality Ranking by Need")
-        fig_bar.update_layout(yaxis={"categoryorder": "total ascending"}) 
+        fig_bar.update_layout(height = 800, yaxis={"categoryorder": "total ascending"}) 
         
         event = st.plotly_chart(fig_bar, use_container_width=True, on_select="rerun", key="ranking_chart")
         if event and event.get("selection", {}).get("points"):
@@ -383,6 +383,7 @@ if page == "Overview":
             st.session_state.selected_muni = clicked_muni
             st.session_state.view = "detail"
             st.rerun()
+        
 
 
 
