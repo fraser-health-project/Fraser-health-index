@@ -405,7 +405,36 @@ if page == "Overview":
             st.session_state.view = "detail"
             st.rerun()
         legend_title_text="Group"
-
+    elif st.session_state.view == "detail":
+        selected_muni = st.session_state.selected_muni
+        municipality_profile = profiles[profiles["Municipality"] == selected_muni]
+        if not municipality_profile.empty:
+            insight = municipality_profile.iloc[0]["Blurb"]
+        else:
+            insight = "No insight available for this municipality."
+        recommendations = policy_recommendations.get(
+            selected_muni,
+            [])
+        if st.button("← Back to Rankings"):
+            st.session_state.view = "ranking"
+            st.session_state.selected_muni = None
+            st.rerun()
+        st.title(selected_muni)
+        st.subheader("Insight")
+        st.write(insight)
+        st.subheader("Policy Recommendations")
+        if recommendations:
+            for i, recommendation in enumerate(
+                recommendations,
+                start=1):
+                st.markdown(
+                    f"**{i}.** {recommendation}")
+        else:
+            st.write("No policy recommendations have been added yet.")
+        st.divider()
+        if st.button("View Analytics →"):
+            st.session_state.view = "analytics"
+            st.rerun()
 
 
 
