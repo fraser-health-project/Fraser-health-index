@@ -360,8 +360,8 @@ if page == "Overview":
         live_pillars[pillar_name + " Z (live)"] = score
     live_pillars["Live Need Index"] = sum(
         live_pillars[p + " Z (live)"] * w for p, w in pillar_weights_normalized.items()
-        if (p + " Z (live)") in live_pillars.columns)
-        live_pillars["Live Need Index"] = (live_pillars["Live Need Index"]- live_pillars["Live Need Index"].min())
+        if (p + " Z (live)") in live_pillars.columns):
+            live_pillars["Live Need Index"] = (live_pillars["Live Need Index"]- live_pillars["Live Need Index"].min())
     ranking = live_pillars[["Municipality", "Live Need Index"]].merge(
     final_df[["Municipality", "Cluster_Label"]],
     on="Municipality"
