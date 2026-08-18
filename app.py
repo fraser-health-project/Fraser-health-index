@@ -369,7 +369,7 @@ if page == "Overview":
         st.session_state.selected_muni = None
     group_descriptions = {
     "Vulnerable Population, Adequate Capacity":
-        "Census data can tell us that these municipalities have large populations, or certain demographics that are especially in need of care (ex. seniors, children under 5, larger areas of growth)",
+        "Census data can tell us that these municipalities have large populations, or certain demographics that are especially in need of care",
     "High-Pressure System (High Demand + Strained Capacity)": "These municipalities likely serve a large population and often face strains in both acute care and emergency departments",
     "Baseline, Moderate Need": "These municipalities adequately supply their resident's needs, however, this does not mean these municipalities do not need new policies to better allieviate need"
     }
