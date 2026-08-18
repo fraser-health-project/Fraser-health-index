@@ -371,7 +371,7 @@ if page == "Overview":
     "Vulnerable Population, Adequate Capacity":
         "Census data can tell us that these municipalities have large populations, or certain demographics that are especially in need of care (ex. seniors, children under 5, larger areas of growth)",
     "High-Pressure System (High Demand + Strained Capacity)": "These municipalities likely serve a large population and often face strains in both acute care and emergency departments",
-    "Baseline, Moderate Need": "These municipalities typically fall in the median or lower average of the index, telling us that they adequately supply their resident's needs, however, this does not mean these municipalities do not need new policies to better allieviate need"
+    "Baseline, Moderate Need": "These municipalities adequately supply their resident's needs, however, this does not mean these municipalities do not need new policies to better allieviate need"
     }
     ranking["Group_Description"] = ranking["Cluster_Label"].map(
     group_descriptions)
