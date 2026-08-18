@@ -285,7 +285,7 @@ def zscore(series):
 ## OVerview Page
 if page == "Overview":
     if "view" not in st.session_state:
-        st.session_state.view = ranking  # "ranking" or "detail"
+        st.session_state.view = :ranking"  # "ranking" or "detail"
     if "selected_muni" not in st.session_state:
         st.session_state.selected_muni = None
     if st.session_state.view == "ranking":
@@ -303,8 +303,6 @@ if page == "Overview":
         fig_bar.update_layout(xaxis={'categoryorder': 'total descending'})  # keeps bars dynamically ranked left-to-right
 
         event = st.plotly_chart(fig_bar, use_container_width=True, on_select="rerun", key="ranking_chart")
-
-        # capture the click
         if event and event.get("selection", {}).get("points"):
             clicked_index = event["selection"]["points"][0]["point_index"]
             clicked_muni = ranking.iloc[clicked_index]["Municipality"]
@@ -335,7 +333,6 @@ if page == "Overview":
                 "Vulnerable Populations": vul / pillar_total,
                 "Outcomes": unmet / pillar_total
             }
-## EDIT THIS
         DEFAULT_VARIABLE_WEIGHTS = {
             "Patient Demand": {"ED Visits Per 1,000": 35, "Acute Hospital Stays": 25, "ACSC (Avoidable) Hospitalizations": 5,
                        "Procedure Demand Rate": 35},
