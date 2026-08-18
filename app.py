@@ -42,7 +42,7 @@ profiles = pd.DataFrame({
             "and growing senior demographic. Although its population is "
             "comparable to smaller municipalities such as Chilliwack, "
             "Mission, and Maple Ridge, Abbotsford has significantly higher "
-            "demand pressure and capacity strain. This is likely caused by "
+            "patient demand pressure and hospital strain. This is likely caused by "
             "Abbotsford General Hospital, which serves not only the "
             "municipality, but the communities of Agassiz, Mission, and "
             "Chilliwack. The needs of this municipality include lowering "
@@ -60,7 +60,7 @@ profiles = pd.DataFrame({
             "emergency visit rate of only 37 people out of every 1,000. "
             "However, Delta presents a mismatch between demand and outcomes: "
             "despite having the lowest demand pressure in the region, it "
-            "ranks highly in Unmet Need and Outcomes, behind only Surrey "
+            "ranks highly in Outcomes, behind only Surrey "
             "and Maple Ridge. This points to a system that may be "
             "underperforming on quality and continuity of care for the "
             "patients it does serve, rather than one strained by sheer volume."
@@ -98,7 +98,7 @@ profiles = pd.DataFrame({
             "Although Burnaby is one of the largest cities in both the "
             "Fraser Valley and British Columbia, it ranks within the median. "
             "Burnaby has over 200,000 residents and a higher ratio of seniors "
-            "or low-income residents, but the demand and capacity strains "
+            "or low-income residents, but the demand and hospital strains "
             "appear to adequately supply the population with enough "
             "resources and programs to prevent bottlenecks in the system. "
             "This can likely be explained by the existence of Burnaby "
@@ -150,7 +150,7 @@ profiles = pd.DataFrame({
             "procedures and using neighbouring cities' hospitals for "
             "specialized care, the municipality demonstrates relatively "
             "effective access to healthcare. Notably, the municipality's "
-            "Unmet Need and Outcomes score is the second-best in Fraser "
+            "Outcomes score is the second-best in Fraser "
             "Health, trailing only Port Moody, indicating physicians are "
             "able to deliver quality care. This care holds despite a "
             "modest strain on capacity, suggesting the system serving "
@@ -163,8 +163,8 @@ profiles = pd.DataFrame({
             "Index, despite being home to Eagle Ridge Hospital, which "
             "provides emergency and acute services to the Tri-Cities, "
             "Anmore, and Belcarra. Ranking the lowest amongst Vulnerable "
-            "Populations and Unmet Need and Outcomes, while being around "
-            "the median for Demand Pressure, the municipality demonstrates "
+            "Populations and Outcomes, while being around "
+            "the median for Patient Demand Pressure, the municipality demonstrates "
             "that it is able to take in patients and provide care with "
             "minimal backlog in the system. It is important to note that "
             "Port Moody has a considerably high surgical incompletion rate, "
@@ -206,7 +206,7 @@ profiles = pd.DataFrame({
             "covers much more than its 113,000 residents, including Cultus "
             "Lake, Agassiz, Harrison, and multiple First Nations communities "
             "in the East Fraser Valley. This coverage presents a very high "
-            "rank in Demand Pressure, third only to Surrey and Abbotsford. "
+            "rank in Patient Demand, third only to Surrey and Abbotsford. "
             "However, it consistently ranks average or below average within "
             "other columns, indicating that care is able to meet the "
             "complexity and quality needed by patients. This combination "
@@ -218,7 +218,7 @@ profiles = pd.DataFrame({
         (
             "While the municipality has lower than 50,000 residents, "
             "Mission consistently ranks within the top half of the index "
-            "and faces significant capacity and access pressure, notably "
+            "and faces significant hospital strain, notably "
             "in emergency departments and patient discharge, where slow "
             "procedures and administration can easily create bottlenecks. "
             "In particular, patients often occupy hospital beds not because "
@@ -264,12 +264,12 @@ profiles = pd.DataFrame({
 # Temporary, drop later
 pillar_columns = {
     "Patient Demand": ['ED visits per 1,000', 'Acute Hospital Stays', 'ACSC (Avoidable) Hospitalizations',
-       'Demand for specialized procedures'],
+       'Procedure Demand Rate'],
     "Hospital Strain": [ 'Acute bed shortage', 'Resource Use Intensity','Facilities', 'Wait before initial assesment (ED)',
        '90th percentile ED wait time', 'Days in alternate levels of care',
        'Procedure and surgical wait', 'Patients admitted through ED','Procedure Incompletion Rate'],
     "Vulnerable Populations": ['Seniors (65+)', 'Over 85', 'Under 5', 'Frailty','Population', 'Unemployed','Population growth', 'High hospital bed users'],
-    "Unmet Need and Outcomes": ['Deaths following major surgery',
+    "Outcomes": ['Deaths following major surgery',
        'All patient readmissions', 'Specialized readmission',
        'In Hospital Sepsis', 'LTC fall rate', 'Pressure Ulcers',
        'Depressive Moods', 'Antipsychotic use (Potentially Innapropriate)']}
@@ -284,16 +284,14 @@ def zscore(series):
     
 ## OVerview Page
 if page == "Overview":
+    ranking = ranking.sort_values("Live Need Index", ascending=False)  
     if "view" not in st.session_state:
-        st.session_state.view = :ranking"  # "ranking" or "detail"
+        st.session_state.view = "ranking"  # "ranking" or "detail"
     if "selected_muni" not in st.session_state:
         st.session_state.selected_muni = None
     if st.session_state.view == "ranking":
         st.title("Fraser Health Needs Index")
         st.markdown("An interactive tool ranking and grouping hospital systems' need across the Fraser Health Region.")
-
-        ranking = ranking.sort_values("Live Need Index", ascending=False)  # your existing live ranking calc
-
         fig_bar = px.bar(
             ranking, x="Municipality", y="Live Need Index",
             color="Cluster_Label",
@@ -310,8 +308,8 @@ if page == "Overview":
             st.session_state.view = "detail"
             st.rerun()
 
-    elif st.session_state.view == "detail":
-        render_detail_page(st.session_state.selected_muni)  # see D2
+    #elif st.session_state.view == "detail":
+        #render_detail_page(st.session_state.selected_muni)  # see D2
     with st.sidebar:
         st.markdown("---")
         st.markdown("#### Pillar Weights")
@@ -334,7 +332,7 @@ if page == "Overview":
                 "Outcomes": unmet / pillar_total
             }
         DEFAULT_VARIABLE_WEIGHTS = {
-            "Patient Demand": {"ED Visits Per 1,000": 35, "Acute Hospital Stays": 25, "ACSC (Avoidable) Hospitalizations": 5,
+            "Patient Demand": {"ED visits Per 1,000": 35, "Acute Hospital Stays": 25, "ACSC (Avoidable) Hospitalizations": 5,
                        "Procedure Demand Rate": 35},
             "Hospital Strain": {"Acute bed shortage": 12.5, "Resource Use Intensity": 10, "Facilities": 10,
                          "Wait before initial assesment (ED)": 10, "90th percentile ED wait time": 10,
