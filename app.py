@@ -5,7 +5,7 @@ import plotly.express as px
 import textwrap
 
 st.set_page_config(page_title="Fraser Health Needs Index", layout="wide")
-final_df = pd.read_csv("data/final_df(part3).csv")
+final_df = pd.read_csv("data/final_df(part4).csv")
 meta = pd.read_csv("data/KPI_metadata.csv")
 
 st.sidebar.title("In this index...")
