@@ -458,10 +458,10 @@ if page == "Overview":
         fig_bar.update_traces(hovertemplate=
         "<b>%{y}</b><br>"
         "Need Index: %{x:.2f}<br>"
-        "<b>Group:</b> %{customdata[0]}<br>"
+        "<b>Group:</b> %{customdata[1]}<br>"
         "<br>"
         "<b>What this group means:</b><br>"
-        "%{customdata[1]}"
+        "%{customdata[2]}"
         "<extra></extra>")
         event = st.plotly_chart(fig_bar, use_container_width=True, on_select="rerun", key="ranking_chart")
         if event and event.get("selection", {}).get("points"):
