@@ -340,9 +340,6 @@ if page == "Overview":
                         c: pillar_var_weights.get(c, 0) / var_total
                         for c in cols}
 
-    st.title("Fraser Health Needs Index")
-    st.markdown("An interactive tool ranking and grouping hospital systems' need across the Fraser Health Region.")
-
     live_pillars = pd.DataFrame({"Municipality": components["Municipality"]})
     pillar_scores = {}
     for pillar_name, cols in pillar_columns.items():
