@@ -386,8 +386,8 @@ if page == "Overview":
             color="Cluster_Label",
             color_discrete_map=cluster_colors,
             title="Municipality Ranking by Need",
-            st.markdown("Tap on a municipality for details"),
             custom_data=["Cluster_Label","Group_Description"])
+        st.markdown("Tap on a municipality for details")
         fig_bar.update_layout(height = 600, yaxis={"categoryorder": "total ascending"},legend_title_text="Group") 
         fig_bar.update_traces(hovertemplate=
         "<b>%{y}</b><br>"
