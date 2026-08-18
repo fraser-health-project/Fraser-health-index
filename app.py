@@ -285,7 +285,7 @@ def zscore(series):
 ## OVerview Page
 if page == "Overview":
     if "view" not in st.session_state:
-        st.session_state.view = "ranking"   # "ranking" or "detail"
+        st.session_state.view = ranking  # "ranking" or "detail"
     if "selected_muni" not in st.session_state:
         st.session_state.selected_muni = None
     if st.session_state.view == "ranking":
