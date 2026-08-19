@@ -336,7 +336,9 @@ def render_analytics_page(muni):
     any_rendered = False
     for fig in charts:
         if fig is not None:
-            st.plotly_chart(fig, width='stretch')
+            col1, col2, col3 = st.columns([1, 6, 1])
+            with col2:
+                st.plotly_chart(fig, width='stretch')
             any_rendered = True
     if not any_rendered:
         st.warning("No chart data available for this municipality. Check that `components` has the expected KPI columns and that the municipality name matches exactly.")
