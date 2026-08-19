@@ -272,6 +272,11 @@ pillar_columns = {
        'In Hospital Sepsis', 'LTC fall rate', 'Pressure Ulcers',
        'Depressive Moods', 'Antipsychotic use (Potentially Innapropriate)']}
 ## Define
+st.write("chart_df columns:", chart_df.columns.tolist())
+st.write("chart_df:", chart_df)
+st.write("meta columns:", meta.columns.tolist())
+st.write("Population in meta:", meta[meta["KPI"] == "Population"])
+
 def zscore(series):
     series = pd.to_numeric(series, errors="coerce")
     mean = series.mean()
