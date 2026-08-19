@@ -273,7 +273,7 @@ pillar_columns = {
        'All patient readmissions', 'Specialized readmission',
        'In Hospital Sepsis', 'LTC fall rate', 'Pressure Ulcers',
        'Depressive Moods', 'Antipsychotic use (Potentially Innapropriate)']}
-
+## Define
 def zscore(series):
     series = pd.to_numeric(series, errors="coerce")
     mean = series.mean()
@@ -281,6 +281,63 @@ def zscore(series):
     if pd.isna(std) or std == 0:
         return pd.Series(0, index=series.index)
     return (series.fillna(mean) - mean) / std
+def to_percentile(series):
+    return series.rank(pct=True) * 100
+population_kpis = ["Population", "Under 5", "Seniors (65+)", "Over 85", "Population growth"]
+hospital_strain_kpis = ['Acute bed shortage', 'Resource Use Intensity', 'Facilities', "Wait before initial assesment (ED)', '90th percentile ED wait time'
+    'Days in alternate levels of care']
+patient_demand_kpis = ['ED visits per 1,000', 'Acute Hospital Stays', 'ACSC (Avoidable) Hospitalizations', 'Procedure Demand Rate'    ]
+outcome_kpis = [ "All patient readmissions", "Deaths following major surgery", "In Hospital Sepsis", "Pressure Ulcers", "Antipsychotic use (Potentially Innapropriate"]
+def build_population_chart(muni):
+    rows = []
+    for kpi in population_kpis:
+        if kpi not in components.columns:
+            continue
+        raw_series = pd.to_numeric(components[kpi], errors="coerce")
+        pct_series = to_percentile(raw_series)
+        muni_raw = raw_series[components["Municipality"] == muni].values[0]
+        muni_pct = pct_series[components["Municipality"] == muni].values[0]
+        rows.append({"KPI": kpi, "Percentile": muni_pct, "Actual Value": muni_raw})
+    chart_df = pd.DataFrame(rows)
+    if chart_df.empty:
+        return None
+    fig = px.bar(
+        chart_df, x=[muni] * len(chart_df), y="Percentile", color="KPI",
+        custom_data=["KPI", "Actual Value"],
+        title="Population & Demographic Context" )
+    fig.update_traces(hovertemplate="%{customdata[0]}: %{customdata[1]:.1f}<br>Percentile: %{y:.0f}")
+    fig.update_layout(barmode="stack", xaxis_title="", yaxis_title="Percentile Rank")
+    return fig
+
+def build_facility_strain_chart(muni):
+    muni_row = components[components["Municipality"] == muni]
+    if muni_row.empty:
+        return None
+    rows = [{"KPI": k, "Value": muni_row[k].values[0]} for k in hospital_strain_kpis if k in components.columns]
+    chart_df = pd.DataFrame(rows)
+    if chart_df.empty:
+        return None
+    return px.bar(chart_df, x="KPI", y="Value", title="Facility Strain", color="KPI")
+def build_demand_chart(muni):
+    muni_row = components[components["Municipality"] == muni]
+    if muni_row.empty:
+        return None
+    rows = [{"Metric": k, "Value": muni_row[k].values[0]} for k in patient_demand_kpis if k in components.columns]
+    chart_df = pd.DataFrame(rows)
+    if chart_df.empty:
+        return None
+    return px.bar(chart_df, x="Metric", y="Value", title="Patient Demand")
+def build_outcomes_chart(muni):
+    muni_row = components[components["Municipality"] == muni]
+    if muni_row.empty:
+        return None
+    rows = [{"KPI": k, "Value": muni_row[k].values[0]} for k in outcomes_kpis if k in components.columns]
+    chart_df = pd.DataFrame(rows)
+    if chart_df.empty:
+        return None
+    return px.bar(chart_df, x="KPI", y="Value", title="Outcomes", color="KPI")
+def render_analytics_page(muni):
+    st.title(f"{muni} — Analytics")
     
 ## OVerview Page
 if page == "Overview":
@@ -501,7 +558,7 @@ if page == "Overview":
             st.write("No policy recommendations have been added yet.")
         st.divider()
         if st.button("View Analytics →"):
-            st.session_state.view = "analytics"
+            st.session_state.view = "Analytics"
             st.rerun()
 
 
