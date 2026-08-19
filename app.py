@@ -558,8 +558,10 @@ if page == "Overview":
             st.write("No policy recommendations have been added yet.")
         st.divider()
         if st.button("View Analytics →"):
-            st.session_state.view = "Analytics"
+            st.session_state.view = "analytics"
             st.rerun()
+    elif st.session_state.view == "analytics":
+        render_analytics_page(st.session_state.selected_muni)
 
 
 
