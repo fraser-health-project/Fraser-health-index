@@ -310,7 +310,7 @@ def build_horizontal_kpi_chart(muni, kpi_list, title):
         range_x=[0, 105],)
     fig.update_traces(
         textposition="outside",
-        hovertemplate="%{y}: %{customdata[0]:.1f}<extra></extra>")
+        hovertemplate="<b>%{y}</b><br>Actual Value: %{customdata[0]}<extra></extra>")
     fig.update_layout(
         bargap=0.5,
         height=max(280, 70 * len(chart_df)),
