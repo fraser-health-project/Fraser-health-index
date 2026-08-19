@@ -338,6 +338,17 @@ def build_outcomes_chart(muni):
     return px.bar(chart_df, x="KPI", y="Value", title="Outcomes", color="KPI")
 def render_analytics_page(muni):
     st.title(f"{muni} — Analytics")
+    if st.button("← Back", key="analytics_back"):
+        st.session_state.view = "detail"
+        st.rerun()
+    charts = [build_population_chart(muni),build_facility_strain_chart(muni),build_access_chart_fallback(muni),build_demand_outcomes_chart(muni),]
+    any_rendered = False
+    for fig in charts:
+        if fig is not None:
+            st.plotly_chart(fig, width='stretch')
+            any_rendered = True
+    if not any_rendered:
+        st.warning("No chart data available for this municipality. Check that `components` has the expected KPI columns and that the municipality name matches exactly.")
     
 ## OVerview Page
 if page == "Overview":
