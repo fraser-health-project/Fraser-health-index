@@ -325,11 +325,11 @@ if page == "Overview":
         "Surrey": [
             "An expansion of specialized procedure and surgical capacity, so Surrey can act as a hub for neighbouring municipalities with complex care needs",
             "Expand care for complication prevention, this includes more follow up appointments, discharge planning, and social services for patients with high risk of frailty or readmission",
-            "PASTE SURREY POLICY RECOMMENDATION 3 HERE"],
+            "Use population growth projections during capacity planning to tie beds, specialists, and other resources to Surrey's rapidly growing city"],
         "Abbotsford": [
-            "PASTE ABBOTSFORD POLICY RECOMMENDATION 1 HERE",
-            "PASTE ABBOTSFORD POLICY RECOMMENDATION 2 HERE",
-            "PASTE ABBOTSFORD POLICY RECOMMENDATION 3 HERE"],
+            "Allocate resources to Abbotsford General Hospital based on it's regional catchment area (i.e include Chilliwack, Mission, Kent), including a greater ambulatory fleet to support rural communities",
+            "Establish regional referal mechanisms across the area so non-emergency patients can recieve timely care at another Fraser facility at times when Abbotsford General's ED is oversatured",
+            "Provide patients with options for same-day diagnostic clinics, so patients who do not need hospital admission can recieve consultation and testing without increasing emergency occupancy"],
         "Delta": [
             "PASTE DELTA POLICY RECOMMENDATION 1 HERE",
             "PASTE DELTA POLICY RECOMMENDATION 2 HERE",
