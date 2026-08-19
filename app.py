@@ -271,21 +271,6 @@ pillar_columns = {
        'All patient readmissions', 'Specialized readmission',
        'In Hospital Sepsis', 'LTC fall rate', 'Pressure Ulcers',
        'Depressive Moods', 'Antipsychotic use (Potentially Innapropriate)']}
-metadata_columns = {
-    "Population": "Population and dwellings — Population, 2021",
-    "Seniors (65+)": "Age characteristics —   65 years and over",
-    "Over 85": "Age characteristics —     85 years and over",
-    "Under 5": "Age characteristics —     0 to 4 years",
-    "Population growth": "Population and dwellings — Population percentage change, 2016 to 2021",
-    "Facilities": "Hospitals",
-    "Resource Use Intensity": "Average Acute Care Resource Use Intensity — Contextual measure | 2024–2025 | Average",
-    "Acute Hospital Stays": "Number of Acute Care Hospital Stays — Contextual measure | 2024–2025 | Number of cases",
-    "90th percentile ED wait time": "Emergency Department Wait Time for Physician Initial Assessment — Indicator | 2024–2025 | 90th percentile",
-    "All patient readmissions": "All Patients Readmitted to Hospital — Indicator | 2024–2025 | Risk-adjusted rate",
-    "Deaths following major surgery": "Hospital Deaths Following Major Surgery — Indicator | 2024–2025 | Risk-adjusted rate",
-    "In Hospital Sepsis": "In-Hospital Sepsis — Indicator | 2024–2025 | Risk-adjusted rate",
-    "Pressure Ulcers": "Worsened Pressure Ulcer in Long-Term Care — Indicator | 2024–2025 | Risk-adjusted rate",
-    "Antipsychotic use (Potentially Innapropriate)": "Potentially Inappropriate Use of Antipsychotics in Long-Term Care — Indicator | 2024–2025 | Risk-adjusted rate",}
 ## Define
 def zscore(series):
     series = pd.to_numeric(series, errors="coerce")
