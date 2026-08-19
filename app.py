@@ -323,8 +323,8 @@ if page == "Overview":
 
         policy_recommendations = {
         "Surrey": [
-            "PASTE SURREY POLICY RECOMMENDATION 1 HERE",
-            "PASTE SURREY POLICY RECOMMENDATION 2 HERE",
+            "An expansion of specialized procedure and surgical capacity, so Surrey can act as a hub for neighbouring municipalities with complex care needs",
+            "Expand care for complication prevention, this includes more follow up appointments, discharge planning, and social services for patients with high risk of frailty or readmission",
             "PASTE SURREY POLICY RECOMMENDATION 3 HERE"],
         "Abbotsford": [
             "PASTE ABBOTSFORD POLICY RECOMMENDATION 1 HERE",
