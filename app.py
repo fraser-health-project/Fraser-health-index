@@ -324,7 +324,7 @@ def build_population_chart(muni):
 def build_hospital_strain_chart(muni):
     return build_horizontal_kpi_chart(muni, hospital_strain_kpis, "Facility Strain")
 def build_demand_chart(muni):
-    return build_horizontal_kpi_chart(muni, demand_kpis, "Patient Demand")
+    return build_horizontal_kpi_chart(muni, patient_demand_kpis, "Patient Demand")
 def build_outcomes_chart(muni):
     return build_horizontal_kpi_chart(muni, outcomes_kpis, "Outcomes")
 def render_analytics_page(muni):
