@@ -299,7 +299,7 @@ def build_horizontal_kpi_chart(muni, kpi_list, title):
         muni_pct = pct_series[muni_mask].iloc[0]
         meta_mask = meta["Municipality"] == muni
         if meta_mask.any() and kpi in meta.columns:
-            actual_value = round(meta.loc[meta_mask, kpi].iloc[0], 2)
+            actual_value = round(meta.loc[meta_mask, kpi].iloc[0], 4)
         else:
             actual_value = None
         rows.append({
