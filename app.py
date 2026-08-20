@@ -293,15 +293,28 @@ def build_horizontal_kpi_chart(muni, kpi_list, title):
             continue
         raw_series = pd.to_numeric(components[kpi], errors="coerce")
         pct_series = raw_series.rank(pct=True) * 100
-        muni_raw = raw_series[components["Municipality"] == muni].values[0]
-        muni_pct = pct_series[components["Municipality"] == muni].values[0]
-        rows.append({"KPI": kpi, "Percentile": muni_pct, "Actual Value": muni_raw})
+        muni_mask = components["Municipality"] == muni
+        if not muni_mask.any():
+            continue
+        muni_pct = pct_series[muni_mask].iloc[0]
+        meta_mask = meta["Municipality"] == muni
+        if meta_mask.any() and kpi in meta.columns:
+            actual_value = meta.loc[meta_mask, kpi].iloc[0]
+        else:
+            actual_value = None
+        rows.append({
+            "KPI": kpi,
+            "Percentile": muni_pct,
+            "Actual Value": actual_value})
     chart_df = pd.DataFrame(rows)
     if chart_df.empty:
         return None
     chart_df = chart_df.sort_values("Percentile")
     fig = px.bar(
-        chart_df, x="Percentile", y="KPI", orientation="h",
+        chart_df,
+        x="Percentile",
+        y="KPI",
+        orientation="h",
         text=chart_df["Percentile"].round(0).astype(int).astype(str) + "th",
         custom_data=["Actual Value"],
         title=title,
@@ -310,7 +323,11 @@ def build_horizontal_kpi_chart(muni, kpi_list, title):
         range_x=[0, 105],)
     fig.update_traces(
         textposition="outside",
-        hovertemplate="%{y}: %{customdata[0]:.1f}<extra></extra>")
+        hovertemplate=(
+            "<b>%{y}</b><br>"
+            "Actual Value: %{customdata[0]}<br>"
+            "Percentile: %{x:.0f}th"
+            "<extra></extra>"))
     fig.update_layout(
         bargap=0.5,
         height=max(280, 70 * len(chart_df)),
