@@ -6,7 +6,7 @@ import textwrap
 
 st.set_page_config(page_title="Fraser Health Needs Index", layout="wide")
 final_df = pd.read_csv("data/final_df(part4).csv")
-meta = pd.read_csv("data/KPI_metadata.csv")
+meta = pd.read_csv("data/KPI_metadata(part2).csv")
 
 st.sidebar.title("In this index...")
 page = st.sidebar.radio(
@@ -273,28 +273,6 @@ pillar_columns = {
        'All patient readmissions', 'Specialized readmission',
        'In Hospital Sepsis', 'LTC fall rate', 'Pressure Ulcers',
        'Depressive Moods', 'Antipsychotic use (Potentially Innapropriate)']}
-kpi_metadata_columns = {
-    "Population": "Population and dwellings â€” Population, 2021",
-    "Under 5": "Under 5",
-    "Seniors (65+)": "Seniors (65+)",
-    "Over 85": "Over 85",
-    "Population growth": "Population growth",
-    "Acute bed shortage": "Acute bed shortage",
-    "Resource Use Intensity": "Resource Use Intensity",
-    "Facilities": "Facilities",
-    "Wait before initial assesment (ED)": "Wait before initial assesment (ED)",
-    "90th percentile ED wait time": "90th percentile ED wait time",
-    "Days in alternate levels of care": "Days in alternate levels of care",
-    "ED visits per 1,000": "Number of Emergency Department Visits",
-    "Acute Hospital Stays": "Number of Acute Care Hospital Stays",
-    "ACSC (Avoidable) Hospitalizations": "ACSC Hospitalizations",
-    "Procedure Demand Rate": "Procedure Demand Rate",
-    "Deaths following major surgery": "Deaths following major surgery",
-    "All patient readmissions": "All Patients Readmitted to Hospital",
-    "In Hospital Sepsis": "In Hospital Sepsis",
-    "Pressure Ulcers": "Pressure Ulcers",
-    "Antipsychotic use (Potentially Innapropriate)": "Antipsychotic use (Potentially Inappropriate)",
-}
 ## Define
 def zscore(series):
     series = pd.to_numeric(series, errors="coerce")
@@ -320,9 +298,8 @@ def build_horizontal_kpi_chart(muni, kpi_list, title):
             continue
         muni_pct = pct_series[muni_mask].iloc[0]
         meta_mask = meta["Municipality"] == muni
-        metadata_column = kpi_metadata_columns.get(kpi)
-        if meta_mask.any() and metadata_column in meta.columns:
-            actual_value = meta.loc[meta_mask, metadata_column].iloc[0]
+        if meta_mask.any() and kpi in meta.columns:
+            actual_value = meta.loc[meta_mask, kpi].iloc[0]
         else:
             actual_value = None
         rows.append({
