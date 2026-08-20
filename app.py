@@ -351,15 +351,22 @@ def render_analytics_page(muni):
         st.rerun()
     charts = [build_population_chart(muni),build_hospital_strain_chart(muni),build_demand_chart(muni),build_outcomes_chart(muni),]
     any_rendered = False
-    for fig in charts:
+    def render_analytics_page(muni):
+    st.title(f"{muni} — Analytics")
+    if st.button("← Back", key="analytics_back"):
+        st.session_state.view = "detail"
+        st.rerun()
+    charts = [
+        build_population_chart(muni),
+        build_hospital_strain_chart(muni),
+        build_demand_chart(muni),
+        build_outcomes_chart(muni)]
+    cols = st.columns(2)
+    for i, fig in enumerate(charts):
         if fig is not None:
-            col1, col2, col3 = st.columns([1, 6, 1])
-            with col2:
-                st.plotly_chart(fig, width='stretch')
-            any_rendered = True
-    if not any_rendered:
-        st.warning("No chart data available for this municipality. Check that `components` has the expected KPI columns and that the municipality name matches exactly.")
-    
+            with cols[i % 2]:
+                st.plotly_chart(fig, width="stretch")
+
 ## OVerview Page
 if page == "Overview":
     #elif st.session_state.view == "detail":
