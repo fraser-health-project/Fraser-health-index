@@ -285,7 +285,7 @@ population_kpis = ["Population", "Under 5", "Seniors (65+)", "Over 85", "Populat
 hospital_strain_kpis = ['Acute bed shortage', 'Resource Use Intensity', 'Facilities', 'Wait before initial assesment (ED)', '90th percentile ED wait time',
     'Days in alternate levels of care']
 patient_demand_kpis = ['ED visits per 1,000', 'Acute Hospital Stays', 'ACSC (Avoidable) Hospitalizations', 'Procedure Demand Rate'    ]
-outcomes_kpis = [ "All patient readmissions", "Deaths following major surgery", "In Hospital Sepsis", "Pressure Ulcers", "Antipsychotic use (Potentially Innapropriate"]
+outcomes_kpis = [ "All patient readmissions", "Deaths following major surgery", "In Hospital Sepsis", "Pressure Ulcers", "Antipsychotic use (Potentially Innapropriate)"]
 def build_horizontal_kpi_chart(muni, kpi_list, title):
     rows = []
     for kpi in kpi_list:
@@ -349,23 +349,16 @@ def render_analytics_page(muni):
     if st.button("← Back", key="analytics_back"):
         st.session_state.view = "detail"
         st.rerun()
-    charts = [build_population_chart(muni),build_hospital_strain_chart(muni),build_demand_chart(muni),build_outcomes_chart(muni),]
-    any_rendered = False
-    def render_analytics_page(muni):
-        st.title(f"{muni} — Analytics")
-        if st.button("← Back", key="analytics_back"):
-            st.session_state.view = "detail"
-            st.rerun()
-        charts = [
-            build_population_chart(muni),
-            build_hospital_strain_chart(muni),
-            build_demand_chart(muni),
-            build_outcomes_chart(muni)]
-        cols = st.columns(2)
-        for i, fig in enumerate(charts):
-            if fig is not None:
-                with cols[i % 2]:
-                    st.plotly_chart(fig, width="stretch")
+    charts = [
+        build_population_chart(muni),
+        build_hospital_strain_chart(muni),
+        build_demand_chart(muni),
+        build_outcomes_chart(muni)]
+    cols = st.columns(2)
+    for i, fig in enumerate(charts):
+        if fig is not None:
+            with cols[i % 2]:
+                st.plotly_chart(fig, width="stretch")
 
 ## OVerview Page
 if page == "Overview":
