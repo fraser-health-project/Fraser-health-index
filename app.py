@@ -383,6 +383,41 @@ def render_analytics_page(muni):
         if fig is not None:
             with cols[i % 2]:
                 st.plotly_chart(fig, width="stretch")
+def build_pillar_compare_chart(muni_a, muni_b):
+    pillar_cols = [c for c in live_pillars.columns if c.endswith(" Z (live)")]
+    compare_df = live_pillars[live_pillars["Municipality"].isin([muni_a, muni_b])][["Municipality"] + pillar_cols]
+    compare_long = compare_df.melt(id_vars="Municipality", var_name="Pillar", value_name="Z-score")
+    compare_long["Pillar"] = compare_long["Pillar"].str.replace(" Z (live)", "", regex=False)
+
+    fig = px.bar(
+        compare_long, x="Z-score", y="Pillar", color="Municipality",
+        orientation="h", barmode="group",
+        color_discrete_sequence=["#E74C3C", "#3B82C4"],
+        title="Pillar Comparison (relative to regional average)")
+    fig.add_vline(x=0, line_dash="dash", annotation_text="Regional average")
+    fig.update_layout(bargap=0.3, height=350)
+    return fig
+def build_compare_kpi_chart(muni_a, muni_b, kpi_list, title):
+    rows = []
+    for kpi in kpi_list:
+        if kpi not in components.columns:
+            continue
+        val_a = pd.to_numeric(components.loc[components["Municipality"] == muni_a, kpi], errors="coerce").values[0]
+        val_b = pd.to_numeric(components.loc[components["Municipality"] == muni_b, kpi], errors="coerce").values[0]
+        rows.append({"KPI": kpi, "Municipality": muni_a, "Value": val_a})
+        rows.append({"KPI": kpi, "Municipality": muni_b, "Value": val_b})
+    chart_df = pd.DataFrame(rows)
+    if chart_df.empty:
+        return None
+     fig = px.bar(
+        chart_df, x="Value", y="KPI", color="Municipality",
+        orientation="h", barmode="group",
+        color_discrete_sequence=["#E74C3C", "#3B82C4"],
+        title=title
+    )
+    fig.update_layout(bargap=0.3, height=max(280, 70 * len(kpi_list)))
+    return fig
+
 
 ## OVerview Page
 if page == "Overview":
@@ -558,6 +593,9 @@ if page == "Overview":
             title="Municipality Ranking by Need",
             custom_data=["Municipality", "Cluster_Label", "Group_Wrapped"])
         st.markdown("Tap on a municipality for details")
+        if st.button("⚖️ Compare Two Municipalities"):
+            st.session_state.view = "compare"
+            st.rerun()
         fig_bar.update_layout(height = 600, yaxis={"categoryorder": "total ascending"},legend_title_text="Group") 
         fig_bar.update_traces(hovertemplate=(
             "<b>%{y}</b><br>"
@@ -607,3 +645,31 @@ if page == "Overview":
             st.rerun()
     elif st.session_state.view == "analytics":
         render_analytics_page(st.session_state.selected_muni)
+    elif st.session_state.view == "compare":
+        st.title("Compare Municipalities")
+        if st.button("← Back to Ranking"):
+            st.session_state.view = "ranking"
+            st.rerun()
+        muni_list = ranking["Municipality"].tolist()
+        col1, col2 = st.columns(2)
+        with col1:
+            muni_a = st.selectbox("Municipality A", muni_list, index=0, key="compare_a")
+        with col2:
+            muni_b = st.selectbox("Municipality B", muni_list, index=1, key="compare_b")
+        if muni_a == muni_b:
+            st.warning("Choose two different municipalities to compare.")
+        else:
+            st.plotly_chart(build_pillar_compare_chart(muni_a, muni_b), width='stretch')
+
+            st.markdown("#### Compare a Specific Category")
+            category_map = {
+                "Population & Demographics": population_kpis,
+                "Facility Strain": facility_strain_kpis,
+                "Healthcare Access": access_kpis,
+                "Demand & Outcomes": demand_outcomes_kpis,}
+            chosen_category = st.selectbox("Category", list(category_map.keys()))
+            kpi_fig = build_compare_kpi_chart(muni_a, muni_b, category_map[chosen_category], chosen_category)
+            if kpi_fig is not None:
+                st.plotly_chart(kpi_fig, width='stretch')
+            else:
+                st.write("No data available for this category.")
