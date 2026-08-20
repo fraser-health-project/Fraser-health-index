@@ -5,6 +5,12 @@ import plotly.express as px
 import textwrap
 
 st.set_page_config(page_title="Fraser Health Needs Index", layout="wide")
+st.markdown("""
+<style>
+    [data-testid="stSidebar"] {
+        width: 220px;}
+</style>
+""", unsafe_allow_html=True)
 final_df = pd.read_csv("data/final_df(part4).csv")
 meta = pd.read_csv("data/KPI_metadata(part2).csv")
 
