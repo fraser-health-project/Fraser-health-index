@@ -292,6 +292,23 @@ hospital_strain_kpis = ['Acute bed shortage', 'Resource Use Intensity', 'Facilit
     'Days in alternate levels of care']
 patient_demand_kpis = ['ED visits per 1,000', 'Acute Hospital Stays', 'ACSC (Avoidable) Hospitalizations', 'Procedure Demand Rate'    ]
 outcomes_kpis = [ "All patient readmissions", "Deaths following major surgery", "In Hospital Sepsis", "Pressure Ulcers", "Antipsychotic use (Potentially Innapropriate)"]
+kpi_units = {
+    "Population growth": "%",
+    "Seniors (65+)": "%",
+    "Over 85": "%",
+    "Under 5": "%",
+    "Frailty": "%",
+    "Facilities" : " per 1,000",
+    "ACSC (Avoidable) Hospitalizations" : " per 1,000",
+    "Procedure Demand Rate" : " per 1,000",
+    "90th percentile ED wait time" : " weeks",
+    "Wait before initial assesment (ED)" : " hours",
+    "Day in alternate levels of care" : " Days",
+    "All patient readmissions": "%",
+    "Deaths following major surgery" : "%",
+    "In Hospital Sepsis" : "%",
+    "Acute Hospital Stays" : " per 1,000",
+    "ED visits per 1,000": " per 1,000"}
 def build_horizontal_kpi_chart(muni, kpi_list, title):
     rows = []
     for kpi in kpi_list:
@@ -311,7 +328,8 @@ def build_horizontal_kpi_chart(muni, kpi_list, title):
         rows.append({
             "KPI": kpi,
             "Percentile": muni_pct,
-            "Actual Value": actual_value})
+            "Actual Value": actual_value,
+            "Unit": kpi_units.get(kpi,"")})
     chart_df = pd.DataFrame(rows)
     if chart_df.empty:
         return None
@@ -322,7 +340,7 @@ def build_horizontal_kpi_chart(muni, kpi_list, title):
         y="KPI",
         orientation="h",
         text=chart_df["Percentile"].round(0).astype(int).astype(str) + "th",
-        custom_data=["Actual Value"],
+        custom_data=["Actual Value","Unit"],
         title=title,
         color="Percentile",
         color_continuous_scale="Reds",
@@ -331,7 +349,7 @@ def build_horizontal_kpi_chart(muni, kpi_list, title):
         textposition="outside",
         hovertemplate=(
             "<b>%{y}</b><br>"
-            "Actual Value: %{customdata[0]}<br>"
+            "Actual Value: %{customdata[0]}%{customdata[1]}<br>"
             "Percentile: %{x:.0f}th"
             "<extra></extra>"))
     fig.update_layout(
