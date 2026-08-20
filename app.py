@@ -394,7 +394,7 @@ def build_pillar_compare_chart(muni_a, muni_b):
         orientation="h", barmode="group",
         color_discrete_sequence=["#E74C3C", "#3B82C4"],
         title="Pillar Comparison (relative to regional average)")
-    fig.add_vline(x=0, line_dash="dash", annotation_text="Regional average")
+    fig.add_vline(x=0, line_dash="dash")
     fig.update_layout(bargap=0.3, height=350)
     return fig
 def build_compare_kpi_chart(muni_a, muni_b, kpi_list, title):
@@ -664,9 +664,9 @@ if page == "Overview":
             st.markdown("#### Compare a Specific Category")
             category_map = {
                 "Population & Demographics": population_kpis,
-                "Facility Strain": facility_strain_kpis,
-                "Healthcare Access": access_kpis,
-                "Demand & Outcomes": demand_outcomes_kpis,}
+                "Hospital Strain": hospital_strain_kpis,
+                "Patient Demand": demand_kpis,
+                "Outcomes": outcomes_kpis,}
             chosen_category = st.selectbox("Category", list(category_map.keys()))
             kpi_fig = build_compare_kpi_chart(muni_a, muni_b, category_map[chosen_category], chosen_category)
             if kpi_fig is not None:
