@@ -352,20 +352,20 @@ def render_analytics_page(muni):
     charts = [build_population_chart(muni),build_hospital_strain_chart(muni),build_demand_chart(muni),build_outcomes_chart(muni),]
     any_rendered = False
     def render_analytics_page(muni):
-    st.title(f"{muni} — Analytics")
-    if st.button("← Back", key="analytics_back"):
-        st.session_state.view = "detail"
-        st.rerun()
-    charts = [
-        build_population_chart(muni),
-        build_hospital_strain_chart(muni),
-        build_demand_chart(muni),
-        build_outcomes_chart(muni)]
-    cols = st.columns(2)
-    for i, fig in enumerate(charts):
-        if fig is not None:
-            with cols[i % 2]:
-                st.plotly_chart(fig, width="stretch")
+        st.title(f"{muni} — Analytics")
+        if st.button("← Back", key="analytics_back"):
+            st.session_state.view = "detail"
+            st.rerun()
+        charts = [
+            build_population_chart(muni),
+            build_hospital_strain_chart(muni),
+            build_demand_chart(muni),
+            build_outcomes_chart(muni)]
+        cols = st.columns(2)
+        for i, fig in enumerate(charts):
+            if fig is not None:
+                with cols[i % 2]:
+                    st.plotly_chart(fig, width="stretch")
 
 ## OVerview Page
 if page == "Overview":
