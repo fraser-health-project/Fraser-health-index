@@ -330,7 +330,7 @@ def build_horizontal_kpi_chart(muni, kpi_list, title):
             "<extra></extra>"))
     fig.update_layout(
         bargap=0.5,
-        height=max(280, 70 * len(chart_df)),
+        height=400,
         showlegend=False,
         coloraxis_showscale=False,
         xaxis_title="Percentile Rank",
