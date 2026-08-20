@@ -304,7 +304,7 @@ def zscore(series):
         return pd.Series(0, index=series.index)
     return (series.fillna(mean) - mean) / std
 population_kpis = ["Population", "Under 5", "Seniors (65+)", "Over 85", "Population growth"]
-hospital_strain_kpis = ['Acute bed shortage', 'Resource Use Intensity', 'Facilities', 'Wait before initial assesment (ED)', '90th percentile ED wait time'
+hospital_strain_kpis = ['Acute bed shortage', 'Resource Use Intensity', 'Facilities', 'Wait before initial assesment (ED)', '90th percentile ED wait time',
     'Days in alternate levels of care']
 patient_demand_kpis = ['ED visits per 1,000', 'Acute Hospital Stays', 'ACSC (Avoidable) Hospitalizations', 'Procedure Demand Rate'    ]
 outcomes_kpis = [ "All patient readmissions", "Deaths following major surgery", "In Hospital Sepsis", "Pressure Ulcers", "Antipsychotic use (Potentially Innapropriate"]
