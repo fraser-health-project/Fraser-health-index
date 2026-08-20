@@ -323,8 +323,8 @@ def build_horizontal_kpi_chart(muni, kpi_list, title):
         metadata_column = kpi_metadata_columns.get(kpi)
         if meta_mask.any() and metadata_column in meta.columns:
             actual_value = meta.loc[meta_mask, metadata_column].iloc[0]
-else:
-    actual_value = None
+        else:
+            actual_value = None
         rows.append({
             "KPI": kpi,
             "Percentile": muni_pct,
