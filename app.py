@@ -260,6 +260,8 @@ profiles = pd.DataFrame({
             "which serve smaller rural regions such as Kent, with adequate "
             "outpatient support and ambulatory systems will help alleviate "
             "patient needs as care becomes complex." ) ]})
+
+# Temporary, drop later
 pillar_columns = {
     "Patient Demand": ['ED visits per 1,000', 'Acute Hospital Stays', 'ACSC (Avoidable) Hospitalizations',
        'Procedure Demand Rate'],
@@ -272,11 +274,6 @@ pillar_columns = {
        'In Hospital Sepsis', 'LTC fall rate', 'Pressure Ulcers',
        'Depressive Moods', 'Antipsychotic use (Potentially Innapropriate)']}
 ## Define
-st.write("chart_df columns:", chart_df.columns.tolist())
-st.write("chart_df:", chart_df)
-st.write("meta columns:", meta.columns.tolist())
-st.write("Population in meta:", meta[meta["KPI"] == "Population"])
-
 def zscore(series):
     series = pd.to_numeric(series, errors="coerce")
     mean = series.mean()
@@ -286,7 +283,7 @@ def zscore(series):
     return (series.fillna(mean) - mean) / std
 population_kpis = ["Population", "Under 5", "Seniors (65+)", "Over 85", "Population growth"]
 hospital_strain_kpis = ['Acute bed shortage', 'Resource Use Intensity', 'Facilities', 'Wait before initial assesment (ED)', '90th percentile ED wait time'
-    'Days in alternate levels of care', '90th percentile ED wait time']
+    'Days in alternate levels of care']
 patient_demand_kpis = ['ED visits per 1,000', 'Acute Hospital Stays', 'ACSC (Avoidable) Hospitalizations', 'Procedure Demand Rate'    ]
 outcomes_kpis = [ "All patient readmissions", "Deaths following major surgery", "In Hospital Sepsis", "Pressure Ulcers", "Antipsychotic use (Potentially Innapropriate"]
 def build_horizontal_kpi_chart(muni, kpi_list, title):
@@ -294,9 +291,9 @@ def build_horizontal_kpi_chart(muni, kpi_list, title):
     for kpi in kpi_list:
         if kpi not in components.columns:
             continue
-        raw_series = pd.to_numeric(final_df[kpi], errors="coerce")
-        pct_series = pd.to_numeric(components[kpi], errors="coerce").rank(pct=True) * 100
-        muni_raw = raw_series[final_df["Municipality"] == muni].values[0]
+        raw_series = pd.to_numeric(components[kpi], errors="coerce")
+        pct_series = raw_series.rank(pct=True) * 100
+        muni_raw = raw_series[components["Municipality"] == muni].values[0]
         muni_pct = pct_series[components["Municipality"] == muni].values[0]
         rows.append({"KPI": kpi, "Percentile": muni_pct, "Actual Value": muni_raw})
     chart_df = pd.DataFrame(rows)
@@ -313,7 +310,7 @@ def build_horizontal_kpi_chart(muni, kpi_list, title):
         range_x=[0, 105],)
     fig.update_traces(
         textposition="outside",
-        hovertemplate="<b>%{y}</b><br>Actual Value: %{customdata[0]}<extra></extra>")
+        hovertemplate="%{y}: %{customdata[0]:.1f}<extra></extra>")
     fig.update_layout(
         bargap=0.5,
         height=max(280, 70 * len(chart_df)),
@@ -569,6 +566,3 @@ if page == "Overview":
             st.rerun()
     elif st.session_state.view == "analytics":
         render_analytics_page(st.session_state.selected_muni)
-
-
-
