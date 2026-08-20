@@ -409,7 +409,7 @@ def build_compare_kpi_chart(muni_a, muni_b, kpi_list, title):
     chart_df = pd.DataFrame(rows)
     if chart_df.empty:
         return None
-     fig = px.bar(
+    fig = px.bar(
         chart_df, x="Value", y="KPI", color="Municipality",
         orientation="h", barmode="group",
         color_discrete_sequence=["#E74C3C", "#3B82C4"],
