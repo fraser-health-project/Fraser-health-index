@@ -665,7 +665,7 @@ if page == "Overview":
             category_map = {
                 "Population & Demographics": population_kpis,
                 "Hospital Strain": hospital_strain_kpis,
-                "Patient Demand": demand_kpis,
+                "Patient Demand": patient_demand_kpis,
                 "Outcomes": outcomes_kpis,}
             chosen_category = st.selectbox("Category", list(category_map.keys()))
             kpi_fig = build_compare_kpi_chart(muni_a, muni_b, category_map[chosen_category], chosen_category)
