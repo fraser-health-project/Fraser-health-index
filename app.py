@@ -700,6 +700,7 @@ if page == "Overview":
             st.plotly_chart(build_pillar_compare_chart(muni_a, muni_b), width='stretch')
 
             st.markdown("#### Compare a Specific Category")
+            st.info("The dotted line (0) represents the regional average, a positive value is higher need, a negative value is lower need")
             category_map = {
                 "Population & Demographics": population_kpis,
                 "Hospital Strain": hospital_strain_kpis,
