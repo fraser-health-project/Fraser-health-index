@@ -388,18 +388,20 @@ def build_pillar_compare_chart(muni_a, muni_b):
     compare_df = live_pillars[live_pillars["Municipality"].isin([muni_a, muni_b])][["Municipality"] + pillar_cols]
     compare_long = compare_df.melt(id_vars="Municipality", var_name="Pillar", value_name="Z-score")
     compare_long["Pillar"] = compare_long["Pillar"].str.replace(" Z (live)", "", regex=False)
-    compare_long["Abs Z-score"] = compare_long["Z-score"].abs()
+    max_range = compare_long["Z-score"].abs().max()
+    max_range = max_range * 1.2 if max_range > 0 else 1  # padding so labels aren't clipped
     fig = px.bar(
-        compare_long, x="Abs Z-score", y="Pillar", color="Municipality",
+        compare_long, x="Z-score", y="Pillar", color="Municipality",
         orientation="h", barmode="group",
-        custom_data=["Z-score"],
         text=compare_long["Z-score"].round(2),
         color_discrete_sequence=["#E74C3C", "#3B82C4"],
         title="Pillar Comparison (relative to regional average)")
-    fig.update_traces(
-        textposition="outside",
-        hovertemplate="%{y}: %{customdata[0]:.2f}<extra></extra>")
-    fig.update_layout(bargap=0.3, height=350, xaxis_title="Distance from average (absolute)")
+    fig.update_traces(textposition="outside")
+    fig.add_vline(x=0, line_dash="dash", line_color="gray")
+    fig.update_layout(
+        bargap=0.3, height=350,
+        xaxis_title="Z-score (relative to regional average)",
+        xaxis=dict(range=[-max_range, max_range]),)
     return fig
 def build_compare_kpi_chart(muni_a, muni_b, kpi_list, title):
     rows = []
@@ -408,22 +410,25 @@ def build_compare_kpi_chart(muni_a, muni_b, kpi_list, title):
             continue
         val_a = pd.to_numeric(components.loc[components["Municipality"] == muni_a, kpi], errors="coerce").values[0]
         val_b = pd.to_numeric(components.loc[components["Municipality"] == muni_b, kpi], errors="coerce").values[0]
-        rows.append({"KPI": kpi, "Municipality": muni_a, "Value": val_a, "Abs Value": abs(val_a)})
-        rows.append({"KPI": kpi, "Municipality": muni_b, "Value": val_b, "Abs Value": abs(val_b)})
+        rows.append({"KPI": kpi, "Municipality": muni_a, "Value": val_a})
+        rows.append({"KPI": kpi, "Municipality": muni_b, "Value": val_b})
     chart_df = pd.DataFrame(rows)
     if chart_df.empty:
         return None
+    max_range = chart_df["Value"].abs().max()
+    max_range = max_range * 1.2 if max_range > 0 else 1
     fig = px.bar(
-        chart_df, x="Abs Value", y="KPI", color="Municipality",
+        chart_df, x="Value", y="KPI", color="Municipality",
         orientation="h", barmode="group",
-        custom_data=["Value"],
         text=chart_df["Value"].round(1),
         color_discrete_sequence=["#E74C3C", "#3B82C4"],
         title=title)
-    fig.update_traces(
-        textposition="outside",
-        hovertemplate="%{y}: %{customdata[0]:.1f}<extra></extra>")
-    fig.update_layout(bargap=0.3, height=max(280, 70 * len(kpi_list)), xaxis_title="Value (absolute)")
+    fig.update_traces(textposition="outside")
+    fig.add_vline(x=0, line_dash="dash", line_color="gray")
+    fig.update_layout(
+        bargap=0.3, height=max(280, 70 * len(kpi_list)),
+        xaxis_title="Value",
+        xaxis=dict(range=[-max_range, max_range]),)
     return fig
 
 ## OVerview Page
