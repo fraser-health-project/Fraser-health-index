@@ -3,6 +3,7 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import textwrap
+import plotly.graph_objects as go
 
 st.set_page_config(page_title="Fraser Health Needs Index", layout="wide")
 st.markdown("""
@@ -388,20 +389,34 @@ def build_pillar_compare_chart(muni_a, muni_b):
     compare_df = live_pillars[live_pillars["Municipality"].isin([muni_a, muni_b])][["Municipality"] + pillar_cols]
     compare_long = compare_df.melt(id_vars="Municipality", var_name="Pillar", value_name="Z-score")
     compare_long["Pillar"] = compare_long["Pillar"].str.replace(" Z (live)", "", regex=False)
-    max_range = compare_long["Z-score"].abs().max()
-    max_range = max_range * 1.2 if max_range > 0 else 1  # padding so labels aren't clipped
-    fig = px.bar(
-        compare_long, x="Z-score", y="Pillar", color="Municipality",
-        orientation="h", barmode="group",
-        text=compare_long["Z-score"].round(2),
-        color_discrete_sequence=["#E74C3C", "#3B82C4"],
-        title="Pillar Comparison (relative to regional average)")
-    fig.update_traces(textposition="outside")
+
+    max_abs = compare_long["Z-score"].abs().max()
+    axis_limit = (max_abs * 1.2) if max_abs > 0 else 1
+    axis_min = -axis_limit
+
+    colors = {muni_a: "#E74C3C", muni_b: "#3B82C4"}
+    fig = go.Figure()
+    for muni in [muni_a, muni_b]:
+        sub = compare_long[compare_long["Municipality"] == muni]
+        fig.add_trace(go.Bar(
+            y=sub["Pillar"],
+            x=sub["Z-score"] - axis_min,   
+            base=axis_min,                  
+            orientation="h",
+            name=muni,
+            marker_color=colors[muni],
+            text=sub["Z-score"].round(2),
+            textposition="outside",
+            customdata=sub["Z-score"],
+            hovertemplate="%{y}: %{customdata:.2f}<extra></extra>",))
     fig.add_vline(x=0, line_dash="dash", line_color="gray")
     fig.update_layout(
-        bargap=0.3, height=350,
-        xaxis_title="Z-score (relative to regional average)",
-        xaxis=dict(range=[-max_range, max_range]),)
+        barmode="group",
+        title="Pillar Comparison (relative to regional average)",
+        xaxis=dict(range=[axis_min, axis_limit], tickmode="linear", dtick=0.5,
+                   title="Z-score (relative to regional average)"),
+        height=350,
+        bargap=0.3,)
     return fig
 def build_compare_kpi_chart(muni_a, muni_b, kpi_list, title):
     rows = []
@@ -415,20 +430,31 @@ def build_compare_kpi_chart(muni_a, muni_b, kpi_list, title):
     chart_df = pd.DataFrame(rows)
     if chart_df.empty:
         return None
-    max_range = chart_df["Value"].abs().max()
-    max_range = max_range * 1.2 if max_range > 0 else 1
-    fig = px.bar(
-        chart_df, x="Value", y="KPI", color="Municipality",
-        orientation="h", barmode="group",
-        text=chart_df["Value"].round(1),
-        color_discrete_sequence=["#E74C3C", "#3B82C4"],
-        title=title)
-    fig.update_traces(textposition="outside")
+    max_abs = chart_df["Value"].abs().max()
+    axis_limit = (max_abs * 1.2) if max_abs > 0 else 1
+    axis_min = -axis_limit
+    colors = {muni_a: "#E74C3C", muni_b: "#3B82C4"}
+    fig = go.Figure()
+    for muni in [muni_a, muni_b]:
+        sub = chart_df[chart_df["Municipality"] == muni]
+        fig.add_trace(go.Bar(
+            y=sub["KPI"],
+            x=sub["Value"] - axis_min,
+            base=axis_min,
+            orientation="h",
+            name=muni,
+            marker_color=colors[muni],
+            text=sub["Value"].round(1),
+            textposition="outside",
+            customdata=sub["Value"],
+            hovertemplate="%{y}: %{customdata:.1f}<extra></extra>",))
     fig.add_vline(x=0, line_dash="dash", line_color="gray")
     fig.update_layout(
-        bargap=0.3, height=max(280, 70 * len(kpi_list)),
-        xaxis_title="Value",
-        xaxis=dict(range=[-max_range, max_range]),)
+        barmode="group",
+        title=title,
+        xaxis=dict(range=[axis_min, axis_limit], title="Value"),
+        height=max(280, 70 * len(kpi_list)),
+        bargap=0.3,)
     return fig
 
 ## OVerview Page
