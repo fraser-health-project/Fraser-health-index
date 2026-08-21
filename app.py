@@ -631,7 +631,7 @@ if page == "Overview":
             title="Municipality Ranking by Need",
             custom_data=["Municipality", "Cluster_Label", "Group_Wrapped"])
         st.markdown("Tap on a municipality for details")
-        if st.button("⚖️ Compare Two Municipalities"):
+        if st.button("Compare Municipalities"):
             st.session_state.view = "compare"
             st.rerun()
         fig_bar.update_layout(height = 600, yaxis={"categoryorder": "total ascending"},legend_title_text="Group") 
@@ -698,9 +698,8 @@ if page == "Overview":
             st.warning("Choose two different municipalities to compare.")
         else:
             st.plotly_chart(build_pillar_compare_chart(muni_a, muni_b), width='stretch')
-
-            st.markdown("#### Compare a Specific Category")
             st.info("The dotted line (0) represents the regional average, a positive value is higher need, a negative value is lower need")
+            st.markdown("#### Compare a Specific Category")
             category_map = {
                 "Population & Demographics": population_kpis,
                 "Hospital Strain": hospital_strain_kpis,
