@@ -506,61 +506,61 @@ if page == "Overview":
             "Establish regional referal mechanisms across the area so non-emergency patients can recieve timely care at another Fraser facility at times when Abbotsford General's ED is oversatured",
             "Provide patients with options for same-day diagnostic clinics, so patients who do not need hospital admission can recieve consultation and testing without increasing emergency occupancy"],
         "Delta": [
-            "PASTE DELTA POLICY RECOMMENDATION 1 HERE",
-            "PASTE DELTA POLICY RECOMMENDATION 2 HERE",
-            "PASTE DELTA POLICY RECOMMENDATION 3 HERE" ],
+            "Conduct patient surveys and audits to determine whether worsened healthcare outcomes are due to a lack of continuity, quality, or access in day-to-day health management and education",
+            "Create centralized information and referral tracking for patients so less people become stuck in the limbo between primary care, specialists, and long term care",
+            "Introduced 5-10 day follow-up standards for high-risk discharged patients in order to prevent complications and/or deterioration down the line" ],
         "Langley": [
-            "PASTE LANGLEY POLICY RECOMMENDATION 1 HERE",
-            "PASTE LANGLEY POLICY RECOMMENDATION 2 HERE",
-            "PASTE LANGLEY POLICY RECOMMENDATION 3 HERE"],
+            "Account for multi-city demand, this includes Clayton, Cloverdale, and other bordering neighbourhoods when furthering capacity and specialist availability",
+            "Expand physician and emergency beds available to patients to combat high ED wait times",
+            "Create reference programs between Langley, Abbotsford, Surrey, and White Rock which include updating diagnostics to divert patients during particular surge times"],
         "White Rock": [
-            "PASTE WHITE ROCK POLICY RECOMMENDATION 1 HERE",
-            "PASTE WHITE ROCK POLICY RECOMMENDATION 2 HERE",
-            "PASTE WHITE ROCK POLICY RECOMMENDATION 3 HERE" ],
+            "Shift into a senior-focused lense, including chronic continous monitering and the expansion of staffing availability for long term care facilities ",
+            "Develop a joint Surrey-White Rock demand model for Peace Arch Hospital rather than simply accounting for the health region or just White Rock's population",
+            "Increase logistical and technical pathways in geriatric care between Peace Arch Hospital, long term care facilities, and specialized clinics to streamline the healthcare experience for an aging population" ],
         "Burnaby": [
-            "PASTE BURNABY POLICY RECOMMENDATION 1 HERE",
-            "PASTE BURNABY POLICY RECOMMENDATION 2 HERE",
-            "PASTE BURNABY POLICY RECOMMENDATION 3 HERE"],
+            "Create dedicated programs to moniter the wait time of highly-demanded procedures in comparison to targeted benchmarks",
+            "Publicize and market local chronic disease management clinics to avoid preventable ED and Primary care visits",
+            "Establish bi-annual to annual capacity reviews associated with senior population growth, and determine staffing of specialists, LTC nurses, and paramedics as such"],
         "New Westminster": [
-            "PASTE NEW WESTMINSTER POLICY RECOMMENDATION 1 HERE",
-            "PASTE NEW WESTMINSTER POLICY RECOMMENDATION 2 HERE",
-            "PASTE NEW WESTMINSTER POLICY RECOMMENDATION 3 HERE"],
+            "Develop a 10-year framework for Royal Columbian Hospital which identifies the capacity of aging infrastructure, and prioritizing upgrades that cannot be addressed by the new section",
+            "Use population and senior growth projections, rather than population when planning annual service and funds",
+            "Prioritize Royal Columbian as being able to serve specialty procedures where demand exceeds current capacity, rather than treating it as covering only New Westminister"],
         "Coquitlam": [
-            "PASTE COQUITLAM POLICY RECOMMENDATION 1 HERE",
-            "PASTE COQUITLAM POLICY RECOMMENDATION 2 HERE",
-            "PASTE COQUITLAM POLICY RECOMMENDATION 3 HERE" ],
+            "Expand resources on residential facilities to address the pressure on LTC facilities",
+            "Target worsening physical and mental conditions through increased follow up monitering, hiring specialized physicians to ensure quality of care, and addressing nurse burnout",
+            "Expansion of preventative care systems, such as bi-annual general exams, and regular screening for high-risk or chronic patients" ],
         "Port Coquitlam": [
-            "PASTE PORT COQUITLAM POLICY RECOMMENDATION 1 HERE",
-            "PASTE PORT COQUITLAM POLICY RECOMMENDATION 2 HERE",
-            "PASTE PORT COQUITLAM POLICY RECOMMENDATION 3 HERE"],
+            "Maintain current care quality through adequate re-imbursement for nurses and physicians to optimize productivity and success",
+            "Preserve the fairly low vulnerable population and unmet need values by expanding preventative care systems through family physicians and health education initiatives",
+            "Establish indicators that are continously monitered so potential capacity bottlenecks are addressed before they fester into a larger issue"],
         "Port Moody": [
-            "PASTE PORT MOODY POLICY RECOMMENDATION 1 HERE",
-            "PASTE PORT MOODY POLICY RECOMMENDATION 2 HERE",
-            "PASTE PORT MOODY POLICY RECOMMENDATION 3 HERE" ],
+            "Decrease turnaround time for operating rooms and increase surgical staffing to alleviate burdens on the high waits for procedures",
+            "Monitor capacity planning for Eagle Ridge Hospital by taking into account regions like Anmore and Belcarra, including consideration of larger ambulatory services to make up for the vast distance",
+            "Improve scheduling and referral systems for specialized consultation and care while maintaining the low demand in ED facilities" ],
         "Pitt Meadows": [
-            "PASTE PITT MEADOWS POLICY RECOMMENDATION 1 HERE",
-            "PASTE PITT MEADOWS POLICY RECOMMENDATION 2 HERE",
-            "PASTE PITT MEADOWS POLICY RECOMMENDATION 3 HERE" ],
+            "Collect further data on the needs, capacity, and complexity of the region in order to find true unique needs",
+            "Ensure residents are able to access Ridge Meadows hospital, this includes the strengthening of services such as shuttles and ambulances",
+            "Expand local clinic and consultation sites to reduce dependance on traveling out of municipality for care or assesment" ],
         "Maple Ridge": [
-            "PASTE MAPLE RIDGE POLICY RECOMMENDATION 1 HERE",
-            "PASTE MAPLE RIDGE POLICY RECOMMENDATION 2 HERE",
-            "PASTE MAPLE RIDGE POLICY RECOMMENDATION 3 HERE"],
+            "Reduce the high numbers of patient re-admission by creating stronger diagnostics to assess a patient's quality of care prior to discharge",
+            "Create Fraser Health wide staff surge policies, this could look like temporary transfers in order to address certain emergencies or crisis in particular areas",
+            "Improve coordination and sharing of health reports between EDs, Primary, LTCs, and residential facilities"],
         "Chilliwack": [
-            "PASTE CHILLIWACK POLICY RECOMMENDATION 1 HERE",
-            "PASTE CHILLIWACK POLICY RECOMMENDATION 2 HERE",
-            "PASTE CHILLIWACK POLICY RECOMMENDATION 3 HERE"],
+            "Identify common hospital services that could be safely conducted in outpatient settings/clinics and move them out of inpatient settings to alleviate acute space occupancy",
+            "Track the utilization of services based on the residence of patients to determine which smaller municipalities require more outpatient supplies",
+            "Calculate the minimum resource and staffing requirements based on the statistics not only within Chilliwack, but also Cultus Lake, Harrison, Agassiz etc etc"],
         "Mission": [
-            "PASTE MISSION POLICY RECOMMENDATION 1 HERE",
-            "PASTE MISSION POLICY RECOMMENDATION 2 HERE",
-            "PASTE MISSION POLICY RECOMMENDATION 3 HERE" ],
+            "Assign dedicated 'discharge coordinators' to complex patients as soon as they arrive to minimize idle use of acute spaces",
+            "Prioritize home-support and/or rehabilitation for seniors who are medically stable but would likely remain in hospital",
+            "Ensure home-care, rehabilitation, and discharge coordination is available 7 days a week so patients don't have to remain in hospitals over weekends" ],
         "Hope": [
-            "PASTE HOPE POLICY RECOMMENDATION 1 HERE",
-            "PASTE HOPE POLICY RECOMMENDATION 2 HERE",
-            "PASTE HOPE POLICY RECOMMENDATION 3 HERE"],
+            "Expand telehealth services in rural areas with specialists in Abbotsford and Chilliwack so residents can access timely assesment rather than long travel times",
+            "Establish telehealth help services in local community centers and clinics so seniors can recieve adequate access",
+            "Assign local coordinators to different communities to help organize resident's follow-up appointments, rehabilitation, and managing in-home management and care"],
         "Kent": [
-            "PASTE KENT POLICY RECOMMENDATION 1 HERE",
-            "PASTE KENT POLICY RECOMMENDATION 2 HERE",
-            "PASTE KENT POLICY RECOMMENDATION 3 HERE"]}
+            "Identify the key characteristics of avoidable hospitalization in Chilliwack General and create targeted prevention campaigns to address them",
+            "Standardize the process for referrals between the community health centre in Agassiz and Chilliwack to better aid patients whose conditions become more complex",
+            "Expand Agassiz health centre to accomodate regular chronic disease management and outpatient patient support"]}
 
         with st.popover("Advanced Settings"):
             st.markdown("Adjust the weight of each individual variable within its pillar.")
