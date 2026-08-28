@@ -711,3 +711,62 @@ if page == "Overview":
                 st.plotly_chart(kpi_fig, width='stretch')
             else:
                 st.write("No data available for this category.")
+
+if page == "Limitations":
+
+    st.title("Limitations")
+
+    st.markdown("""
+    No analysis that utilizes publicly available data at a fairly amateur independent level is without flaw. The limitations page below outlines some of the major limitations and opportunities for further growth, accuracy, and recommendations for those wishing to create something similar for their own communities. It covers geographic aggregation, data quality, temporal coverage, and index construction.
+
+    ## 1. Geographic Aggregation
+
+    **1.1 Coarse geographic data**
+
+    Several CIHI and surgical wait time indicators were only available at a coarser geographic level (such as HSDA or even the broader Fraser Valley). In these cases, a single uniform value was placed on every municipality, while in reality these values will likely vary. As a result, these forms of variables were weighted much lower in the interest of granularity. However, even despite this mitigation, municipalities within similar HSDA areas are bound to show very similar need indexes and variable values due to the census area overlap, while in reality there are bound to be underlying differences that would make for a far more accurate index.
+
+    **1.2 Healthcare facility catchment areas**
+
+    Population as a per-capita denominator was replaced with census-subdivisions across all municipalities. While this helped differentiate municipalities within the same HSDA, it fails to account for the catchment area of healthcare facilities (such as Peace Arch Hospital in White Rock, which covers a large portion of Surrey, but only accounts for White Rock in the index). As a result, the geographic accuracy of various municipalities' need scores is heavily dependent on the catchment area of its facilities. This likely explains how municipalities like Burnaby tend to score below average despite having a large population, since Burnaby General additionally covers portions of Vancouver, which don't fall under Fraser Health and are therefore ignored when selecting data.
+
+    **1.3 Municipality consolidation**
+
+    Smaller municipalities such as Township of Langley, Agassiz, and Harrison were consolidated into broader groups of Langley and Kent in order to maintain a consistent 16 municipalities that had ample data to calculate the index. However, by doing so, the index risks losing out on key differences from community to community and obscuring unique changes.
+
+
+    ## 2. Data Quality
+
+    **2.1 Hospital-scale bias**
+
+    Indicators such as CIHI's Total Resource Use Intensity are heavily reliant on the scale and patient volume of a given hospital, even if smaller facilities utilize far more per patient. Since this variable was used raw rather than converted to a per-capita rate, there is still further conversation to be had as to whether bias towards larger municipalities is prevalent within the index due to the data used.
+
+    **2.2 Suppressed or omitted data**
+
+    Certain data from CIHI and surgical wait data is suppressed and/or omitted in accordance with data reliability and privacy policy. This results in incomplete coverage on indicators and a tendency towards lower scoring for smaller municipalities, examples of these being Port Coquitlam, Hope, and Pitt Meadows.
+
+    **2.3 Unattributed surgical wait times**
+
+    Some surgical wait times data was listed under all facilities and therefore could not be linked towards a particular municipality or hospital. These were excluded from the analysis in order to preserve the core function of creating a comparative index. As a result, this index may exclude or result in the incompleteness of certain procedures.
+
+
+    ## 3. Temporal Coverage
+
+    **3.1 Different reference periods**
+
+    Data used for this index spans different reference periods based on what was readily available. For example, Stats Can's Census could only provide data from the 2021 census, while CIHI indicators reflect the most recent time-period (2024-25). As a result, the need index reflects a composite estimate of the most recent available year per source, and is not accurate to the modern day (i.e. the second half of 2026).
+
+    **3.2 Data collection date**
+
+    Because data was collected across the span of mid to late July and has not been updated since, this index does not reflect recent developments in certain indicators or any new facilities a municipality may have received.
+
+
+    ## 4. Index Construction
+
+    **4.1 Subjective weighting and variable selection**
+
+    The weighting, selection, and calculation of individual variables as key performance indicators (KPIs) were determined by relative contrast and subjective judgement rather than peer-reviewed or externally validated choices. Recommendations from LLMs such as Claude and ChatGPT were also taken into account before choosing. As a result, the index is not definitive; allocating different weights would likely produce different results.
+
+    **4.2 User-adjustable weighting**
+
+    To address this subjectivity, an option has been added for users to change weights if they so choose and observe the changes it makes to a municipality's score in real time. The next step of this project would likely be to observe what indicators are the best at demonstrating struggle or bottlenecks in not only healthcare, but social systems as a whole. Being able to research this at a higher level with access to larger sets of data would not only help the accuracy of this index, but also its ability to spark meaningful discussion and change.
+    """)
