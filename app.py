@@ -804,7 +804,7 @@ elif page == "Data and Limitations":
 
     To address this subjectivity, an option has been added for users to change weights if they so choose and observe the changes it makes to a municipality's score in real time. The next step of this project would likely be to observe what indicators are the best at demonstrating struggle or bottlenecks in not only healthcare, but social systems as a whole. Being able to research this at a higher level with access to larger sets of data would not only help the accuracy of this index, but also its ability to spark meaningful discussion and change.
     /div>""", unsafe_allow_html=True)
-    st.header("Sources")
+    st.title("Sources")
     st.markdown("""
     <div class="cormorant-page">
     
