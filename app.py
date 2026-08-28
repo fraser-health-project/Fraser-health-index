@@ -799,3 +799,215 @@ elif page == "Data and Limitations":
     Statistics Canada. (2022). *Census Profile of Population, 2021 Census Profiles* [Data set sorted by geography]. Statistics Canada Catalogue no. 98-316-X2021001.  
     [https://www12.statcan.gc.ca/census-recensement/2021/dp-pd/prof/search-recherche/lst/results-resultats.cfm?Lang=E&GEOCODE=59](https://www12.statcan.gc.ca/census-recensement/2021/dp-pd/prof/search-recherche/lst/results-resultats.cfm?Lang=E&GEOCODE=59)
     """)
+    
+    elif page == "Methodology":
+
+    st.title("Methodology")
+
+    st.markdown("""
+    This project combines publicly available hospital indicators, population demographic, and facility data into a composite need index, spanning 16 municipalities across the Fraser Valley Health Service Delivery Area (HSDA). This index is supported by an interactive tool that allows users to explore and compare results between municipalities.
+
+    The methodology below is a guide covering resources used, data collection, data merging and integration, index building, further analysis, and designing the interactive tool.
+
+    ## 1. Resources Used
+
+    **1.1 OneNote or another note-taking software**
+
+    Used to keep track of what datasets have been used, what they tell us, and when they were accessed.
+
+    **1.2 Microsoft Excel**
+
+    Used primarily for smaller datasets and as a preliminary way to review datasets before processing them with Python or integrating them into the index.
+
+    **1.3 Python**
+
+    Python was used for data processing and analysis, primarily through Pandas, NumPy, Plotly, and Text Wrap. The analysis can be conducted natively on a desktop setup or through Jupyter Notebooks via Anaconda.
+
+    **1.4 GitHub and Streamlit**
+
+    A GitHub repository was used to store the project code, while Streamlit was used to create the interactive web interface.
+
+
+    ## 2. Data Collection
+
+    **2.1 Datasets used**
+
+    This project involved five different datasets:
+
+    **2.1.1 CIHI Number of Acute Care Beds**
+
+    Primarily used to calculate the number of acute care beds per 1,000 residents as an indicator of hospital strain.
+
+    **2.1.2 CIHI Indicator Library**
+
+    Provided facility-level performance data spanning 2010–2025.
+
+    **2.1.3 Statistics Canada Census Profile of Population**
+
+    Extracted at the HSDA level for population and at the municipal level for percentages and growth rates. This provided data on population, population growth, seniors, and children under five.
+
+    **2.1.4 BC Surgical Waiting Times**
+
+    Provided data on whether procedures were completed within a given timeframe, as well as median and 90th-percentile wait times.
+
+    **2.1.5 Statistics Canada Open Database of Healthcare Facilities**
+
+    Provided data on healthcare services available within each municipality, including ambulances, residential and long-term-care facilities, and hospital spaces.
+
+    **2.2 Geographic scope**
+
+    This project covers 16 municipalities within the Fraser Health region. A single region was selected rather than multiple regions in order to understand individual municipal needs in comparison with one another.
+
+    Fraser Health was selected due to its composition of some of British Columbia's largest cities, as well as the project's connection to the region. The region was further subdivided into 16 municipalities to match individual census data and available records. Creating smaller municipalities would result in substantially more missing data and many regions that do not possess their own medical facilities.
+
+    **2.3 Data reference periods**
+
+    Each data source covers a different time period:
+
+    **2.3.1 CIHI Number of Acute Care Beds:** 2024–25
+
+    **2.3.2 CIHI Indicator Library:** 2010–2025
+
+    **2.3.3 Statistics Canada Census of Population:** 2021, with population growth measured from 2016–2021
+
+    **2.3.4 BC Surgical Waiting Times:** 2009–2026
+
+    **2.3.5 Statistics Canada Open Database of Healthcare Facilities:** 2025
+
+
+    ## 3. Merging and Integration
+
+    Because each dataset used its own method of defining indicators—including hospital name, region, HSDA, or municipality name—it was necessary to standardize each dataset into the 16 municipalities before building the index.
+
+    **3.1 Establishing a canonical municipality list**
+
+    A canonical list of all 16 municipalities was defined as the standard unit for the project. Every dataset was mapped to follow this list prior to merging.
+
+    **3.2 Mapping facility-level indicators**
+
+    Facility-level indicators, such as those in CIHI's Indicator Library, were manually mapped by assigning each facility to the municipality where it was located using a lookup dictionary.
+
+    Several smaller communities and neighbourhoods were consolidated into nearby municipalities in order to maintain consistency and avoid having more than 16 values when calling unique municipalities. For example, although the Township of Langley and Langley City are separate municipalities, they were merged into a broader "Langley" municipality.
+
+    **3.3 Applying HSDA-level data**
+
+    Some data, including Statistics Canada's Census data, was only available at broader HSDA levels. In these cases, a uniform value was applied to all municipalities within the respective HSDA.
+
+    Population was an exception because it could be applied as a unique denominator for each municipality when calculating per-capita rates. Population, including seniors and children under five, was therefore extracted from census subdivisions rather than HSDA reporting.
+
+    **3.4 Creating the master dataset**
+
+    Once all datasets had been cleaned and standardized using municipality as the common key, they were merged into a single master table containing one row per municipality and one column per indicator.
+
+
+    ## 4. Index Building
+
+    **4.1 Z-score normalization**
+
+    Before combining the data into a final need score, all variables were normalized using z-score normalization. This was necessary because the variables were expressed in different units, such as weeks, rates per 1,000, and percentages. Adding these values directly would allow variables with numerically larger units to disproportionately influence the index.
+
+    **4.2 Choosing a normalization method**
+
+    Two normalization methods were considered: min-max normalization and z-score normalization.
+
+    Min-max normalization expresses the largest value as 100, the smallest as 0, and all other values somewhere between them. Z-score normalization instead expresses values relative to the mean, with zero representing the mean and one representing one standard deviation.
+
+    Z-score normalization was selected because it was considered less vulnerable to the influence of outliers than min-max normalization.
+
+    **4.3 Four conceptual pillars**
+
+    Rather than combining every variable into one conglomerate score immediately, the variables were divided into four conceptual pillars:
+
+    - **Patient Demand**
+    - **Hospital Strain**
+    - **Vulnerable Populations**
+    - **Outcomes**
+
+    Patient Demand reflects how much residents are utilizing facilities through measures such as emergency-room visits, acute care, and specialized procedures.
+
+    Hospital Strain measures how well hospitals are managing this demand and helps identify potential bottlenecks.
+
+    Vulnerable Populations provides context for the expected complexity and scale of care required.
+
+    Outcomes focuses on post-hospital results and long-term care, helping assess the quality of care provided by healthcare facilities.
+
+    Together, these pillars assess entry, process, and longer-term indicators of the Fraser Health system.
+
+    **4.4 Weighting**
+
+    To produce a single index score for each municipality, the four pillars must be combined. Each pillar is therefore weighted equally by default at 25% of the total score.
+
+    Within each pillar, individual variables are assigned weights, typically between 5% and 25%, based on their granularity and subjective assessment of importance.
+
+    Users can modify both pillar weights and individual variable weights through the interactive tool.
+
+
+    ## 5. Further Analysis
+
+    **5.1 K-means clustering**
+
+    Beyond the need-score index, the municipalities were analyzed using clustering. This helps demonstrate that healthcare need can take different forms—for example, vulnerable populations may require different resources from municipalities experiencing worsening outcomes.
+
+    **5.2 Four-dimensional clustering**
+
+    K-means clustering was used to group municipalities according to their four pillar scores. Each municipality can be thought of as a point in a four-dimensional space, with each dimension representing one pillar.
+
+    K-means groups municipalities that are close together in this four-dimensional space, meaning municipalities with similar combinations of pillar scores are grouped together.
+
+    This differs from the index because the clustering algorithm identifies groups based on profile similarity rather than a subjective definition of what constitutes need. However, the scores used by the algorithm are still influenced by the subjective weighting decisions used in the index.
+
+    **5.3 Selecting the number of clusters**
+
+    The number of clusters was determined using two complementary methods: the elbow method and silhouette scoring.
+
+    The elbow method identifies the point at which adding additional clusters produces diminishing improvements in cluster similarity. Silhouette scoring measures how well-separated the resulting clusters are.
+
+    Both methods indicated that five or more clusters would provide little additional benefit. Given the relatively small dataset of 16 municipalities, three clusters were ultimately selected.
+
+    **5.4 Naming the clusters**
+
+    Once the final clusters were defined, the average pillar values within each cluster were compared. Each cluster was then given a plain-language name summarizing its characteristics:
+
+    - **High Pressure Systems**
+    - **Vulnerable Populations + Adequate Capacity**
+    - **Baseline, Moderate Need**
+
+
+    ## 6. Designing the Interactive Tool
+
+    **6.1 Purpose of the interactive tool**
+
+    The culmination of the index was an interactive web application that allows users to visualize and explore different variables and pillars, read municipality-specific insights and recommendations, and compare analytics between municipalities.
+
+    An interactive tool was selected instead of a static report to maintain a degree of customization and encourage exploration.
+
+    **6.2 Core features**
+
+    The application includes:
+
+    **6.2.1 Municipality ranking**
+
+    A graph ranking the final need score of each municipality.
+
+    **6.2.2 Live reweighting**
+
+    Users can modify pillar weights and, through advanced settings, individual variable weights.
+
+    **6.2.3 Municipality comparison**
+
+    A comparative page allows users to compare the values of two municipalities.
+
+    **6.2.4 Municipality detail pages**
+
+    Each municipality has a detail page containing an insight/blurb and policy recommendations based on notable statistics.
+
+    **6.2.5 Analytics page**
+
+    A separate analytics page shows how each municipality's statistics compare with other municipalities using percentile rankings.
+
+    **6.3 Intended users**
+
+    The web application was designed to work alongside policymakers, analysts, and grassroots organizations working with data to support resource-allocation decisions and arguments for changes to existing policy.
+
+    As a result, features such as municipality-specific insights, policy recommendations, and accessible bar graphs were selected to prioritize aesthetic and functional simplicity.
+    """)
