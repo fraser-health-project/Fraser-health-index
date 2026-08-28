@@ -6,6 +6,36 @@ import textwrap
 import plotly.graph_objects as go
 
 st.set_page_config(page_title="Fraser Health Needs Index", layout="wide")
+# Custom fonts
+st.markdown("""
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&display=swap');
+
+/* Main page titles */
+h1 {
+    font-family: 'Cormorant Garamond', serif !important;
+    font-weight: 600 !important;
+}
+
+/* Methodology and Limitations pages */
+.cormorant-page {
+    font-family: 'Cormorant Garamond', serif;
+}
+
+.cormorant-page h2,
+.cormorant-page h3,
+.cormorant-page p,
+.cormorant-page li {
+    font-family: 'Cormorant Garamond', serif;
+}
+
+.cormorant-page p,
+.cormorant-page li {
+    font-size: 18px;
+    line-height: 1.5;
+}
+</style>
+""", unsafe_allow_html=True)
 
 final_df = pd.read_csv("data/final_df(part4).csv")
 meta = pd.read_csv("data/KPI_metadata.csv")
@@ -720,6 +750,7 @@ elif page == "Data and Limitations":
     st.title("Limitations")
 
     st.markdown("""
+    <div class="cormorant-page">
     No analysis that utilizes publicly available data at a fairly amateur independent level is without flaw. The limitations page below outlines some of the major limitations and opportunities for further growth, accuracy, and recommendations for those wishing to create something similar for their own communities. It covers geographic aggregation, data quality, temporal coverage, and index construction.
 
     ## 1. Geographic Aggregation
@@ -801,13 +832,14 @@ elif page == "Data and Limitations":
 
     Statistics Canada. (2022). *Census Profile of Population, 2021 Census Profiles* [Data set sorted by geography]. Statistics Canada Catalogue no. 98-316-X2021001.  
     [https://www12.statcan.gc.ca/census-recensement/2021/dp-pd/prof/search-recherche/lst/results-resultats.cfm?Lang=E&GEOCODE=59](https://www12.statcan.gc.ca/census-recensement/2021/dp-pd/prof/search-recherche/lst/results-resultats.cfm?Lang=E&GEOCODE=59)
-    """)
+    </div>""", unsafe_allow_html=True)
     
 elif page == "Methodology":
 
     st.title("Methodology")
 
     st.markdown("""
+    <div class="cormorant-page">
     This project combines publicly available hospital indicators, population demographic, and facility data into a composite need index, spanning 16 municipalities across the Fraser Valley Health Service Delivery Area (HSDA). This index is supported by an interactive tool that allows users to explore and compare results between municipalities.
 
     The methodology below is a guide covering resources used, data collection, data merging and integration, index building, further analysis, and designing the interactive tool.
@@ -1013,4 +1045,5 @@ elif page == "Methodology":
     The web application was designed to work alongside policymakers, analysts, and grassroots organizations working with data to support resource-allocation decisions and arguments for changes to existing policy.
 
     As a result, features such as municipality-specific insights, policy recommendations, and accessible bar graphs were selected to prioritize aesthetic and functional simplicity.
-    """)
+    </div>
+    """, unsafe_allow_html=True)
