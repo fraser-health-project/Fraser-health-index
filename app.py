@@ -770,3 +770,34 @@ elif page == "Data and Limitations":
 
     To address this subjectivity, an option has been added for users to change weights if they so choose and observe the changes it makes to a municipality's score in real time. The next step of this project would likely be to observe what indicators are the best at demonstrating struggle or bottlenecks in not only healthcare, but social systems as a whole. Being able to research this at a higher level with access to larger sets of data would not only help the accuracy of this index, but also its ability to spark meaningful discussion and change.
     """)
+    st.markdown("""
+    ## Sources
+
+    ### Sources for data
+
+    *Note: All data was accessed between July 14th 2026 and July 31st 2026.*
+
+    Canadian Institute for Health Information. (2025). *Number of Acute Care Beds* [Data set]. CIHI.  
+    [https://www.cihi.ca/en/indicators/number-of-acute-care-beds](https://www.cihi.ca/en/indicators/number-of-acute-care-beds)
+
+    Canadian Institute for Health Information. (2025). *All Available Indicators* [Data set]. CIHI.  
+    [https://www.cihi.ca/en/access-data-and-reports/indicator-library/download-indicator-data](https://www.cihi.ca/en/access-data-and-reports/indicator-library/download-indicator-data)
+
+    Statistics Canada. (2022). *Census Profile of Population, 2021 Census of Fraser East Health Service Delivery Area* [Data set]. Statistics Canada Catalogue no. 98-316-X2021001.  
+    [https://www12.statcan.gc.ca/census-recensement/2021/dp-pd/prof/details/page.cfm?Lang=E&SearchText=Fraser%20&DGUIDlist=2022A00075921&GENDERlist=1,2,3&STATISTIClist=1,4&HEADERlist=0](https://www12.statcan.gc.ca/census-recensement/2021/dp-pd/prof/details/page.cfm?Lang=E&SearchText=Fraser%20&DGUIDlist=2022A00075921&GENDERlist=1,2,3&STATISTIClist=1,4&HEADERlist=0)
+
+    Statistics Canada. (2022). *Census Profile of Population, 2021 Census of Fraser South Health Service Delivery Area* [Data set]. Statistics Canada Catalogue no. 98-316-X2021001.  
+    [https://www12.statcan.gc.ca/census-recensement/2021/dp-pd/prof/details/page.cfm?Lang=E&SearchText=Fraser%20&DGUIDlist=2022A00075923&GENDERlist=1,2,3&STATISTIClist=1,4&HEADERlist=0](https://www12.statcan.gc.ca/census-recensement/2021/dp-pd/prof/details/page.cfm?Lang=E&SearchText=Fraser%20&DGUIDlist=2022A00075923&GENDERlist=1,2,3&STATISTIClist=1,4&HEADERlist=0)
+
+    Statistics Canada. (2022). *Census Profile of Population, 2021 Census of Fraser North Health Service Delivery Area* [Data set]. Statistics Canada Catalogue no. 98-316-X2021001.  
+    [https://www12.statcan.gc.ca/census-recensement/2021/dp-pd/prof/details/page.cfm?Lang=E&SearchText=Fraser%20&DGUIDlist=2022A00075922&GENDERlist=1,2,3&STATISTIClist=1,4&HEADERlist=0](https://www12.statcan.gc.ca/census-recensement/2021/dp-pd/prof/details/page.cfm?Lang=E&SearchText=Fraser%20&DGUIDlist=2022A00075922&GENDERlist=1,2,3&STATISTIClist=1,4&HEADERlist=0)
+
+    Open Government. (2026). *Surgical wait times* [Data set]. Government of Canada.  
+    [https://open.canada.ca/data/en/dataset/7c1bf2a8-96bb-4ad5-888d-a90672eb306e](https://open.canada.ca/data/en/dataset/7c1bf2a8-96bb-4ad5-888d-a90672eb306e)
+
+    Statistics Canada. (2025). *Open database of healthcare facilities* [Data set]. Statistics Canada.  
+    [https://www.statcan.gc.ca/en/lode/databases/odhf](https://www.statcan.gc.ca/en/lode/databases/odhf)
+
+    Statistics Canada. (2022). *Census Profile of Population, 2021 Census Profiles* [Data set sorted by geography]. Statistics Canada Catalogue no. 98-316-X2021001.  
+    [https://www12.statcan.gc.ca/census-recensement/2021/dp-pd/prof/search-recherche/lst/results-resultats.cfm?Lang=E&GEOCODE=59](https://www12.statcan.gc.ca/census-recensement/2021/dp-pd/prof/search-recherche/lst/results-resultats.cfm?Lang=E&GEOCODE=59)
+    """)
