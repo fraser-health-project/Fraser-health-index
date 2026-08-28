@@ -712,7 +712,7 @@ if page == "Overview":
             else:
                 st.write("No data available for this category.")
 
-elif page == "Limitations":
+elif page == "Data and Limitations":
 
     st.title("Limitations")
 
