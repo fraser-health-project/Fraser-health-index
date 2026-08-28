@@ -800,7 +800,7 @@ elif page == "Data and Limitations":
     [https://www12.statcan.gc.ca/census-recensement/2021/dp-pd/prof/search-recherche/lst/results-resultats.cfm?Lang=E&GEOCODE=59](https://www12.statcan.gc.ca/census-recensement/2021/dp-pd/prof/search-recherche/lst/results-resultats.cfm?Lang=E&GEOCODE=59)
     """)
     
-    elif page == "Methodology":
+elif page == "Methodology":
 
     st.title("Methodology")
 
