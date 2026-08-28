@@ -772,9 +772,7 @@ elif page == "Data and Limitations":
     """)
     st.markdown("""
     ## Sources
-
-    ### Sources for data
-
+    
     *Note: All data was accessed between July 14th 2026 and July 31st 2026.*
 
     Canadian Institute for Health Information. (2025). *Number of Acute Care Beds* [Data set]. CIHI.  
