@@ -749,8 +749,8 @@ elif page == "Data and Limitations":
 
     st.title("Limitations")
 
-    st.markdown(<div class="cormorant-page">
-    """
+    st.markdown("""
+    <div class="cormorant-page">
     No analysis that utilizes publicly available data at a fairly amateur independent level is without flaw. The limitations page below outlines some of the major limitations and opportunities for further growth, accuracy, and recommendations for those wishing to create something similar for their own communities. It covers geographic aggregation, data quality, temporal coverage, and index construction.
 
     ## 1. Geographic Aggregation
@@ -803,8 +803,10 @@ elif page == "Data and Limitations":
     **4.2 User-adjustable weighting**
 
     To address this subjectivity, an option has been added for users to change weights if they so choose and observe the changes it makes to a municipality's score in real time. The next step of this project would likely be to observe what indicators are the best at demonstrating struggle or bottlenecks in not only healthcare, but social systems as a whole. Being able to research this at a higher level with access to larger sets of data would not only help the accuracy of this index, but also its ability to spark meaningful discussion and change.
-    """)
+    /div>""", unsafe_allow_html=True))
+    
     st.markdown("""
+    <div class="cormorant-page">
     ## Sources
     
     *Note: All data was accessed between July 14th 2026 and July 31st 2026.*
