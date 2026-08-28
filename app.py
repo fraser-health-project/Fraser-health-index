@@ -7,16 +7,6 @@ import plotly.graph_objects as go
 
 st.set_page_config(page_title="Fraser Health Needs Index", layout="wide")
 
-st.markdown("""
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&display=swap');
-
-html, body, [class*="css"] {
-    font-family: 'Cormorant Garamond', serif;
-}
-</style>
-""", unsafe_allow_html=True)
-
 final_df = pd.read_csv("data/final_df(part4).csv")
 meta = pd.read_csv("data/KPI_metadata.csv")
 st.markdown("""
