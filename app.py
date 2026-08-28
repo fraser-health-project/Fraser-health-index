@@ -749,8 +749,8 @@ elif page == "Data and Limitations":
 
     st.title("Limitations")
 
-    st.markdown("""
-    <div class="cormorant-page">
+    st.markdown(<div class="cormorant-page">
+    """
     No analysis that utilizes publicly available data at a fairly amateur independent level is without flaw. The limitations page below outlines some of the major limitations and opportunities for further growth, accuracy, and recommendations for those wishing to create something similar for their own communities. It covers geographic aggregation, data quality, temporal coverage, and index construction.
 
     ## 1. Geographic Aggregation
