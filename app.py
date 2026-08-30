@@ -677,7 +677,7 @@ if page == "Overview":
         if st.button("Compare Municipalities"):
             st.session_state.view = "compare"
             st.rerun()
-        fig_bar.update_layout(height = 600, yaxis={"categoryorder": "total descending"},legend_title_text="Group") 
+        fig_bar.update_layout(height = 650, yaxis={"categoryorder": "total descending"},legend_title_text="Group") 
         fig_bar.update_traces(hovertemplate=(
             "<b>%{y}</b><br>"
             "Need Index: %{x:.2f}<br>"
