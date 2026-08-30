@@ -693,11 +693,6 @@ if page == "Overview":
         st.session_state.selected_muni = clicked_muni
         st.session_state.view = "detail"
         st.rerun()
-    if st.button("View Details"):
-        st.session_state.selected_muni = selected_from_dropdown
-        st.session_state.view = "detail"
-        st.rerun()
-        legend_title_text="Group"
     elif st.session_state.view == "detail":
         selected_muni = st.session_state.selected_muni
         municipality_profile = profiles[profiles["Municipality"] == selected_muni]
