@@ -687,15 +687,15 @@ if page == "Overview":
             "%{customdata[2]}"
             "<extra></extra>"))
         event = st.plotly_chart(fig_bar, use_container_width=True, on_select="rerun", key="ranking_chart")
-    if event and event.get("selection", {}).get("points"):
-        clicked_index = event["selection"]["points"][0]["point_index"]
-        clicked_muni = ranking.iloc[clicked_index]["Municipality"]
-        st.session_state.selected_muni = clicked_muni
-        st.session_state.view = "detail"
-        st.rerun()
-    elif st.session_state.view == "detail":
-        selected_muni = st.session_state.selected_muni
-        municipality_profile = profiles[profiles["Municipality"] == selected_muni]
+        if event and event.get("selection", {}).get("points"):
+            clicked_index = event["selection"]["points"][0]["point_index"]
+            clicked_muni = ranking.iloc[clicked_index]["Municipality"]
+            st.session_state.selected_muni = clicked_muni
+            st.session_state.view = "detail"
+            st.rerun()
+        elif st.session_state.view == "detail":
+            selected_muni = st.session_state.selected_muni
+            municipality_profile = profiles[profiles["Municipality"] == selected_muni]
         if not municipality_profile.empty:
             insight = municipality_profile.iloc[0]["Blurb"]
         else:
