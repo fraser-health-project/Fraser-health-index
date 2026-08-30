@@ -687,7 +687,11 @@ if page == "Overview":
             "%{customdata[2]}"
             "<extra></extra>"))
         st.plotly_chart(fig_bar, use_container_width=True, key="ranking_chart")
-        selected_from_dropdown = st.selectbox("Select a municipality to view details:",ranking["Municipality"].tolist())
+        selected_from_dropdown = st.selectbox("Select a municipality to view details:",["Select a municipality..."] + ranking["Municipality"].tolist())
+        if selected_from_dropdown != "Select a municipality...":
+            st.session_state.selected_muni = selected_from_dropdown
+            st.session_state.view = "detail"
+            st.rerun()
         if st.button("View Details"):
             st.session_state.selected_muni = selected_from_dropdown
             st.session_state.view = "detail"
