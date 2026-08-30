@@ -672,7 +672,7 @@ if page == "Overview":
             color_discrete_map=cluster_colors,
             title="Municipality Ranking by Need",
             custom_data=["Municipality", "Cluster_Label", "Group_Wrapped"])
-        fig_bar.update_layout(yaxis=dict(autorange='reversed', automargin=True),height=700,legend=dict(yanchor="bottom",y=-0.3,xanchor="center",x=0.5,),dragmode=False,)
+        fig_bar.update_layout(yaxis=dict(autorange='reversed', automargin=True),height=600,legend=dict(yanchor="bottom",y=-0.3,xanchor="center",x=0.5,),dragmode=False,)
         st.markdown("Tap on a municipality for details")
         if st.button("Compare Municipalities"):
             st.session_state.view = "compare"
@@ -687,15 +687,17 @@ if page == "Overview":
             "%{customdata[2]}"
             "<extra></extra>"))
         st.plotly_chart(fig_bar, use_container_width=True, key="ranking_chart")
-        selected_from_dropdown = st.selectbox("Select a municipality to view details:",["Select a municipality..."] + ranking["Municipality"].tolist())
-        if selected_from_dropdown != "Select a municipality...":
-            st.session_state.selected_muni = selected_from_dropdown
-            st.session_state.view = "detail"
-            st.rerun()
-        if st.button("View Details"):
-            st.session_state.selected_muni = selected_from_dropdown
-            st.session_state.view = "detail"
-            st.rerun()
+        event = st.plotly_chart(fig_bar, use_container_width=True, on_select="rerun", key="ranking_chart")
+    if event and event.get("selection", {}).get("points"):
+        clicked_index = event["selection"]["points"][0]["point_index"]
+        clicked_muni = ranking.iloc[clicked_index]["Municipality"]
+        st.session_state.selected_muni = clicked_muni
+        st.session_state.view = "detail"
+        st.rerun()
+    if st.button("View Details"):
+        st.session_state.selected_muni = selected_from_dropdown
+        st.session_state.view = "detail"
+        st.rerun()
         legend_title_text="Group"
     elif st.session_state.view == "detail":
         selected_muni = st.session_state.selected_muni
