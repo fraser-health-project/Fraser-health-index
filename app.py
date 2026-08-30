@@ -663,7 +663,7 @@ if page == "Overview":
             color_discrete_map=cluster_colors,
             title="Municipality Ranking by Need",
             custom_data=["Municipality", "Cluster_Label", "Group_Wrapped"])
-        fig_bar.update_layout(yaxis=dict(autorange='reversed', automargin=True),height=600,
+        fig_bar.update_layout(yaxis=dict(autorange='reversed', automargin=True),height=600,)
         st.markdown("Tap on a municipality for details")
         if st.button("Compare Municipalities"):
             st.session_state.view = "compare"
