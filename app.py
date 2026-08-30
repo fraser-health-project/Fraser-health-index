@@ -663,7 +663,7 @@ if page == "Overview":
             color_discrete_map=cluster_colors,
             title="Municipality Ranking by Need",
             custom_data=["Municipality", "Cluster_Label", "Group_Wrapped"])
-        fig_bar.update_layout(yaxis={'categoryorder': 'total descending'})
+        fig_bar.update_layout(yaxis=dict(autorange='reversed'))
         event = st.plotly_chart(fig_bar, use_container_width=True, on_select="rerun", key="ranking_chart")
         st.markdown("Tap on a municipality for details")
         if st.button("Compare Municipalities"):
