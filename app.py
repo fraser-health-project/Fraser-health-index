@@ -686,11 +686,10 @@ if page == "Overview":
             "<b>What this group means:</b><br>"
             "%{customdata[2]}"
             "<extra></extra>"))
-        event = st.plotly_chart(fig_bar, use_container_width=True, on_select="rerun", key="ranking_chart",config={"scrollZoom": False})
-        if event and event.get("selection", {}).get("points"):
-            clicked_point = event["selection"]["points"][0]
-            clicked_muni = clicked_point["customdata"][0]
-            st.session_state.selected_muni = clicked_muni
+        st.plotly_chart(fig_bar, use_container_width=True, key="ranking_chart")
+        selected_from_dropdown = st.selectbox("Select a municipality to view details:",ranking["Municipality"].tolist())
+        if st.button("View Details"):
+            st.session_state.selected_muni = selected_from_dropdown
             st.session_state.view = "detail"
             st.rerun()
         legend_title_text="Group"
