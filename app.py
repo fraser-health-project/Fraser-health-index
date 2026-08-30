@@ -492,6 +492,15 @@ def build_compare_kpi_chart(muni_a, muni_b, kpi_list, title):
 
 ## OVerview Page
 if page == "Overview":
+    st.markdown(
+    """
+    <style>
+    .js-plotly-plot, .plot-container, .svg-container {
+        touch-action: pan-y !important;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True)
     #elif st.session_state.view == "detail":
         #render_detail_page(st.session_state.selected_muni)  # see D2
     with st.sidebar:
