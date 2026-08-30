@@ -686,7 +686,6 @@ if page == "Overview":
             "<b>What this group means:</b><br>"
             "%{customdata[2]}"
             "<extra></extra>"))
-        st.plotly_chart(fig_bar, use_container_width=True, key="ranking_chart")
         event = st.plotly_chart(fig_bar, use_container_width=True, on_select="rerun", key="ranking_chart")
     if event and event.get("selection", {}).get("points"):
         clicked_index = event["selection"]["points"][0]["point_index"]
