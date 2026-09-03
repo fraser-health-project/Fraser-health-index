@@ -688,8 +688,8 @@ if page == "Overview":
             "<extra></extra>"))
         event = st.plotly_chart(fig_bar, use_container_width=True, on_select="rerun", key="ranking_chart")
         if event and event.get("selection", {}).get("points"):
-            clicked_index = event["selection"]["points"][0]["point_index"]
-            clicked_muni = ranking.iloc[clicked_index]["Municipality"]
+            point = event["selection"]["points"][0]
+            clicked_muni = point["customdata"][0]
             st.session_state.selected_muni = clicked_muni
             st.session_state.view = "detail"
             st.rerun()
